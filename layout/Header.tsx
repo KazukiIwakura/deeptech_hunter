@@ -17,17 +17,17 @@ const BreadcrumbItem: React.FC<{ onClick?: () => void; isCurrent?: boolean; chil
     const commonClasses = "truncate";
     
     const content = isCurrent
-        ? <span className={cn("font-bold text-main", commonClasses)} aria-current="page">{children}</span>
+        ? <span className={cn("font-medium text-text-primary", commonClasses)} aria-current="page">{children}</span>
         : onClick
-            ? <button onClick={onClick} className={cn("text-main-light hover:text-main hover:underline", commonClasses)}>{children}</button>
-            : <span className={cn("text-main-light", commonClasses)}>{children}</span>;
+            ? <button onClick={onClick} className={cn("text-text-secondary hover:text-primary hover:underline transition-colors", commonClasses)}>{children}</button>
+            : <span className={cn("text-text-secondary", commonClasses)}>{children}</span>;
             
     return <li className="flex items-center">{content}</li>;
 };
 
 const BreadcrumbSeparator: React.FC = () => (
     <li aria-hidden="true" className="flex items-center">
-        <ChevronRightIcon className="w-4 h-4 mx-2 text-neutral-400 flex-shrink-0" />
+        <ChevronRightIcon className="w-4 h-4 mx-2 text-text-tertiary flex-shrink-0" />
     </li>
 );
 
@@ -97,13 +97,13 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
     };
 
     return (
-        <header className="flex-shrink-0 bg-white/80 backdrop-blur-sm sticky top-0 z-20 border-b border-neutral-200/80">
-            <div className="w-full max-w-full mx-auto px-4 sm:px-6 md:px-8 flex items-center justify-between min-h-[5rem] py-4">
+        <header className="flex-shrink-0 bg-bg-primary border-b border-border-secondary shadow-sm sticky top-0 z-20">
+            <div className="w-full max-w-full mx-auto px-6 md:px-8 flex items-center justify-between min-h-[4rem] py-3">
                 <div className="flex-1 min-w-0 flex items-center">
                     {renderContent()}
                 </div>
                 
-                <div className="flex-shrink-0 flex items-center gap-2 sm:gap-4 ml-4">
+                <div className="flex-shrink-0 flex items-center gap-3 ml-4">
                     <Button
                         onClick={() => handleOpenHowItWorksModal('api_key')}
                         variant={isApiKeyConfigured ? 'success' : 'danger'}
@@ -111,7 +111,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
                         aria-label={isApiKeyConfigured ? "APIキー接続状況の確認・変更" : "APIキー接続を設定する"}
                     >
                         <KeyIcon className="w-4 h-4 mr-2" />
-                        {isApiKeyConfigured ? 'APIキー接続中' : 'APIキー未接続'}
+                        <span className="font-medium">{isApiKeyConfigured ? 'APIキー接続中' : 'APIキー未接続'}</span>
                     </Button>
                 </div>
             </div>

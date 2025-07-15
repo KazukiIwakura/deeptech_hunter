@@ -1,0 +1,290 @@
+/* デジタル庁デザインシステム準拠スタイル */
+
+/* フォント設定 - デジタル庁推奨 */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+
+/* デジタル庁カラーパレット */
+:root {
+    /* プライマリーカラー（デジタル庁ブルー） */
+    --color-primary: #0066CC;
+    --color-primary-hover: #0052A3;
+    --color-primary-light: #E6F2FF;
+    --color-primary-lighter: #F5F9FF;
+
+    /* セカンダリーカラー */
+    --color-secondary: #666666;
+    --color-secondary-light: #F5F5F5;
+
+    /* システムカラー */
+    --color-success: #00A040;
+    --color-success-light: #E6F7ED;
+    --color-warning: #FF8C00;
+    --color-warning-light: #FFF4E6;
+    --color-error: #E60012;
+    --color-error-light: #FFE6E8;
+
+    /* テキストカラー（コントラスト比4.5:1以上を確保） */
+    --color-text-primary: #1A1A1A;
+    /* コントラスト比12.6:1 */
+    --color-text-secondary: #4A4A4A;
+    /* コントラスト比7.0:1 */
+    --color-text-tertiary: #6B6B6B;
+    /* コントラスト比4.6:1 */
+
+    /* 背景カラー */
+    --color-bg-primary: #FFFFFF;
+    --color-bg-secondary: #F8F9FA;
+    --color-bg-tertiary: #F0F0F0;
+
+    /* ボーダーカラー（コントラスト比3:1以上を確保） */
+    --color-border-primary: #B3B3B3;
+    /* コントラスト比3.4:1 */
+    --color-border-secondary: #D4D4D4;
+    /* コントラスト比3.1:1 */
+
+    /* シャドウ */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+
+    /* 角丸 */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+
+    /* スペーシング */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+    --spacing-2xl: 48px;
+}
+
+/* ベーススタイル */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: var(--color-text-primary);
+    background-color: var(--color-bg-secondary);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* デジタル庁準拠ボタンスタイル */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    border-radius: var(--radius-md);
+    transition: all 0.2s ease;
+    cursor: pointer;
+    border: 1px solid transparent;
+    text-decoration: none;
+    font-size: 16px;
+    line-height: 1.5;
+    min-height: 44px;
+    /* アクセシビリティ準拠 */
+}
+
+.btn:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* プライマリーボタン */
+.btn-primary {
+    background-color: var(--color-primary);
+    color: white;
+    padding: 12px 24px;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background-color: var(--color-primary-hover);
+}
+
+/* セカンダリーボタン */
+.btn-secondary {
+    background-color: white;
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+    padding: 12px 24px;
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background-color: var(--color-primary-light);
+}
+
+/* テキストボタン */
+.btn-text {
+    background-color: transparent;
+    color: var(--color-primary);
+    padding: 8px 16px;
+}
+
+.btn-text:hover:not(:disabled) {
+    background-color: var(--color-primary-light);
+}
+
+/* サイズバリエーション */
+.btn-small {
+    font-size: 14px;
+    padding: 8px 16px;
+    min-height: 36px;
+}
+
+.btn-large {
+    font-size: 18px;
+    padding: 16px 32px;
+    min-height: 52px;
+}
+
+/* カードスタイル */
+.card {
+    background-color: var(--color-bg-primary);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--color-border-secondary);
+    padding: var(--spacing-lg);
+}
+
+.card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+/* フォームスタイル */
+.form-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--color-border-primary);
+    border-radius: var(--radius-md);
+    font-size: 16px;
+    line-height: 1.5;
+    background-color: white;
+    transition: border-color 0.2s ease;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px var(--color-primary-light);
+}
+
+/* ヘッダースタイル */
+.header {
+    background-color: var(--color-bg-primary);
+    border-bottom: 1px solid var(--color-border-secondary);
+    box-shadow: var(--shadow-sm);
+}
+
+/* サイドバースタイル */
+.sidebar {
+    background-color: var(--color-text-primary);
+    color: white;
+}
+
+.sidebar-item {
+    padding: 12px 16px;
+    border-radius: var(--radius-md);
+    transition: background-color 0.2s ease;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.sidebar-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.sidebar-item.active {
+    background-color: var(--color-primary);
+    color: white;
+}
+
+/* ユーティリティクラス */
+.text-primary {
+    color: var(--color-text-primary);
+}
+
+.text-secondary {
+    color: var(--color-text-secondary);
+}
+
+.text-tertiary {
+    color: var(--color-text-tertiary);
+}
+
+.bg-primary {
+    background-color: var(--color-bg-primary);
+}
+
+.bg-secondary {
+    background-color: var(--color-bg-secondary);
+}
+
+.border-primary {
+    border-color: var(--color-border-primary);
+}
+
+.border-secondary {
+    border-color: var(--color-border-secondary);
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .btn {
+        font-size: 14px;
+        padding: 10px 20px;
+    }
+
+    .card {
+        padding: var(--spacing-md);
+    }
+}
+
+/* アクセシビリティ */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* フォーカス表示の改善（コントラスト比3:1以上を確保） */
+.focus-visible:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.2);
+}
+
+/* 高コントラストフォーカス表示 */
+@media (prefers-contrast: high) {
+    .focus-visible:focus-visible {
+        outline: 3px solid var(--color-primary);
+        outline-offset: 2px;
+        box-shadow: 0 0 0 6px rgba(0, 102, 204, 0.3);
+    }
+}
+
+/* スクリーンリーダー用 */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}

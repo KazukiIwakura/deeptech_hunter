@@ -23,20 +23,24 @@ export const HomePage: React.FC<HomePageProps> = ({
   const { discoverySuggestions, isDiscoveryLoading, discoveryError } = appShell;
 
   return (
-    <div className={cn('w-full max-w-6xl mx-auto p-4 sm:p-6 md:p-8', "flex flex-col items-center justify-center min-h-full py-12 md:py-16")}>
+    <div className="w-full max-w-6xl mx-auto px-6 md:px-8 py-12 md:py-16 flex flex-col items-center justify-center min-h-full">
       <div className="w-full text-center">
-        <h1 className={cn('text-[40px] leading-tight md:text-[48px] md:leading-tight font-bold tracking-tight text-main', "mb-4")}>ディープテックハンター</h1>
-        <p className={cn('text-lg leading-snug font-bold text-main', "font-normal text-main-light max-w-2xl mx-auto mb-12", 'text-base text-main-light/90 leading-relaxed')}>
-            未来を創る可能性を秘めた、日本の大学発ディープテックを発掘します。
-            AIの提案から、あるいは気になるキーワードで、新たな金脈を探してみましょう。
+        <h1 className="text-4xl md:text-5xl font-bold text-text-primary mb-6 tracking-tight">
+          ディープテックハンター
+        </h1>
+        <p className="text-lg text-text-secondary max-w-2xl mx-auto mb-12 leading-relaxed">
+          未来を創る可能性を秘めた、日本の大学発ディープテックを発掘します。<br />
+          AIの提案から、あるいは気になるキーワードで、新たな金脈を探してみましょう。
         </p>
         <div className="max-w-xl mx-auto">
             <SearchForm onSearch={onSearch} isLoading={isSearching} />
         </div>
-        <p className={cn('text-sm text-main-lighter leading-normal', "text-center mt-6 flex items-center justify-center")}>
-          <LightbulbIcon className="w-4 h-4 mr-2 text-warning" />
-          <span>AIは大学の公式DBやJST等の公的情報源を参考に、信頼性の高い情報を優先的に探索します。</span>
-        </p>
+        <div className="mt-8 p-4 bg-warning-light rounded-lg border border-warning/20 max-w-2xl mx-auto">
+          <p className="text-sm text-warning-text flex items-center justify-center">
+            <LightbulbIcon className="w-4 h-4 mr-2 flex-shrink-0" />
+            <span>AIは大学の公式DBやJST等の公的情報源を参考に、信頼性の高い情報を優先的に探索します。</span>
+          </p>
+        </div>
       </div>
 
       <DiscoveryZone 
