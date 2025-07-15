@@ -41,16 +41,25 @@ const DemoModeToggle: React.FC<{
       </div>
       <div
         className={cn(
-          'relative inline-flex h-6 w-11 items-center rounded-full transition-colors',
-          isEnabled ? 'bg-success' : 'bg-neutral-600'
+          'relative inline-flex h-6 w-11 items-center rounded-full transition-colors border-2',
+          isEnabled 
+            ? 'bg-success border-success' 
+            : 'bg-neutral-600 border-neutral-600'
         )}
+        aria-hidden="true"
       >
         <span
           className={cn(
-            'inline-block h-4 w-4 transform rounded-full bg-white transition-transform',
+            'inline-block h-3 w-3 transform rounded-full bg-white transition-transform flex items-center justify-center',
             isEnabled ? 'translate-x-6' : 'translate-x-1'
           )}
-        />
+        >
+          {isEnabled && (
+            <svg className="w-2 h-2 text-success" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+            </svg>
+          )}
+        </span>
       </div>
     </button>
     {disabled && (

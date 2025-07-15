@@ -59,8 +59,11 @@ export const DiscoveryZone: React.FC<DiscoveryZoneProps> = ({ suggestions, isLoa
                 </svg>
               </div>
               <div className="mt-2">
-                <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-primary-light text-primary">
-                  🔍 探索する
+                <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-primary-light text-primary border border-primary/20">
+                  <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                  探索する
                 </span>
               </div>
             </button>
