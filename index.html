@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ディープテックハンター | 日本の大学技術を発掘</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                DEFAULT: '#0017C1',
+                hover: '#00119A',
+                light: '#E6E8FF',
+                lighter: '#F5F6FF',
+                text: '#0017C1',
+              },
+              danger: {
+                DEFAULT: '#EC0000',
+                text: '#C40000',
+                light: '#FDEBEB',
+                'light-hover': '#FBDADA',
+              },
+              success: {
+                DEFAULT: '#10b981',      // emerald-500
+                text: '#047857',         // emerald-700
+                'text-dark': '#065f46',   // emerald-800
+                light: '#d1fae5',        // emerald-100
+                'light-hover': '#a7f3d0', // emerald-200
+                border: '#6ee7b7',       // emerald-300
+                'border-hover': '#34d399' // emerald-400
+              },
+              warning: {
+                DEFAULT: '#f59e0b',      // amber-500
+                text: '#b45309',         // amber-700
+                light: '#fef3c7',        // amber-100
+              },
+              info: {
+                DEFAULT: '#3b82f6',      // blue-500
+                text: '#1e40af',         // blue-800
+                light: '#dbeafe',        // blue-100
+              },
+              accent: {
+                DEFAULT: '#d946ef',     // fuchsia-500
+              },
+              main: {
+                DEFAULT: '#1A1A1A',
+                light: '#555555',
+                lighter: '#888888',
+              },
+              neutral: { // from slate
+                50: '#f8fafc',
+                100: '#f1f5f9',
+                200: '#e2e8f0',
+                300: '#cbd5e1',
+                400: '#94a3b8',
+                500: '#64748b',
+                600: '#475569',
+                700: '#334152',
+                800: '#1e293b',
+                900: '#0f172a',
+              },
+            },
+            fontFamily: {
+              sans: ['"Noto Sans JP"', 'sans-serif'],
+            },
+            borderRadius: {
+              '4xl': '2rem', // 32px
+            },
+          },
+        },
+      }
+    </script>
+    <style>
+      /* Smooth scrolling for anchor links and programmatic scrolls */
+      html {
+        scroll-behavior: smooth;
+      }
+
+      /* For custom scrollbar styling */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #e2e8f0; /* neutral-200 */
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #94a3b8; /* neutral-400 */
+        border-radius: 8px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #64748b; /* neutral-500 */
+      }
+      /* Global fade-in animation */
+      @keyframes fade-in {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .animate-fade-in {
+        animation: fade-in 0.5s ease-out forwards;
+      }
+      /* Avatar glow animation for AI thinking state */
+      @keyframes pulse-glow {
+        0%, 100% {
+          box-shadow: 0 0 0 0 rgba(0, 23, 193, 0.4);
+        }
+        50% {
+          box-shadow: 0 0 0 8px rgba(0, 23, 193, 0);
+        }
+      }
+      .animate-pulse-glow {
+        animation: pulse-glow 2s infinite;
+      }
+      /* For screen-reader accessibility */
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border-width: 0;
+      }
+
+      /* --- Custom Button Styles --- */
+      .btn {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+          font-weight: 700;
+          border-radius: 0.5rem; /* 8px */
+          transition: all 0.2s ease-in-out;
+          -webkit-tap-highlight-color: transparent;
+          cursor: pointer;
+          text-align: center;
+          border: 1px solid transparent;
+      }
+      .btn:focus-visible {
+          outline: 3px solid #0017C1; /* primary */
+          outline-offset: 2px;
+      }
+      .btn:disabled, .btn[disabled] {
+          opacity: 0.6;
+          cursor: not-allowed;
+          background-image: none !important;
+          pointer-events: none;
+      }
+
+      /* Variants */
+      .btn-primary {
+          background-color: #0017C1; /* primary */
+          color: white;
+      }
+      .btn-primary:not(:disabled):hover {
+          background-color: #00119A; /* primary-hover */
+      }
+      .btn-primary:disabled {
+          background-color: #94a3b8; /* neutral-400 */
+      }
+
+      .btn-secondary {
+          background-color: white;
+          color: #0017C1; /* primary */
+          border-color: #0017C1; /* primary */
+      }
+      .btn-secondary:not(:disabled):hover {
+          background-color: #F5F6FF; /* primary-lighter */
+      }
+
+      .btn-tertiary {
+          background-color: transparent;
+          color: #0017C1; /* primary */
+          text-decoration: underline;
+          text-underline-offset: 4px;
+      }
+      .btn-tertiary:not(:disabled):hover {
+          background-color: #F5F6FF; /* primary-lighter */
+      }
+
+      .btn-ghost {
+        background-color: transparent;
+        color: #555555; /* main-light */
+      }
+      .btn-ghost:not(:disabled):hover {
+        background-color: #f1f5f9; /* neutral-100 */
+      }
+
+      .btn-discovery {
+          background-color: transparent;
+          color: #1A1A1A; /* main */
+          border-color: #cbd5e1; /* neutral-300 */
+      }
+      .btn-discovery:not(:disabled):hover {
+          color: #0017C1; /* primary */
+          border-color: #0017C1; /* primary */
+          background-color: #F5F6FF; /* primary-lighter */
+      }
+
+      .btn-success {
+          background-color: #d1fae5; /* success-light */
+          color: #065f46; /* success-text-dark */
+          border-color: #6ee7b7; /* success-border */
+      }
+      .btn-success:not(:disabled):hover {
+          background-color: #a7f3d0; /* success-light-hover */
+          border-color: #34d399; /* success-border-hover */
+      }
+
+      .btn-danger {
+          background-color: #FDEBEB; /* danger-light */
+          color: #C40000; /* danger-text */
+          border-color: #EC0000; /* danger */
+      }
+      .btn-danger:not(:disabled):hover {
+          background-color: #FBDADA; /* danger-light-hover */
+          border-color: #C40000; /* danger-text */
+      }
+      
+      /* Inverted for dark backgrounds */
+      .btn-primary-inverted {
+          background-color: hsla(0,0%,100%,.1);
+          color: white;
+      }
+      .btn-primary-inverted:not(:disabled):hover {
+          background-color: hsla(0,0%,100%,.2);
+      }
+      .btn-secondary-inverted {
+          background-color: transparent;
+          color: white;
+          border: 1px solid #94a3b8; /* neutral-400 */
+      }
+      .btn-secondary-inverted:not(:disabled):hover {
+          background-color: hsla(0,0%,100%,.1);
+          border-color: white;
+      }
+
+      .btn-ghost-inverted {
+          background-color: transparent;
+          color: #cbd5e1; /* neutral-300 */
+      }
+      .btn-ghost-inverted:not(:disabled):hover {
+          background-color: hsla(0,0%,100%,.1);
+          color: white;
+      }
+
+      /* Sizes */
+      .btn-large {
+          min-width: 136px;
+          min-height: 56px;
+          padding: 0 24px;
+          font-size: 1rem; /* 16px */
+          line-height: 1;
+      }
+      .btn-medium {
+          min-width: 96px;
+          min-height: 48px;
+          padding: 0 20px;
+          font-size: 1rem; /* 16px */
+          line-height: 1;
+      }
+      .btn-small {
+          min-width: 80px;
+          min-height: 36px;
+          padding: 0 16px;
+          font-size: 0.875rem; /* 14px */
+          line-height: 1;
+      }
+      .btn-x-small {
+          min-width: 72px;
+          min-height: 28px;
+          padding: 0 12px;
+          font-size: 0.875rem; /* 14px */
+          line-height: 1;
+      }
+
+      /* Icon Only Button Styles */
+      .btn-icon-only {
+        padding: 0 !important;
+        flex-shrink: 0;
+      }
+      .btn-icon-only.btn-large { width: 56px; }
+      .btn-icon-only.btn-medium { width: 48px; }
+      .btn-icon-only.btn-small { width: 36px; }
+      .btn-icon-only.btn-x-small { width: 28px; }
+
+      /* Target Area Enhancement */
+      .btn-target-enhance::after {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 100%;
+          height: 100%;
+          min-width: 44px;
+          min-height: 44px;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://esm.sh/react-dom@^19.1.0/",
+    "react/": "https://esm.sh/react@^19.1.0/",
+    "react": "https://esm.sh/react@^19.1.0",
+    "@google/genai": "https://esm.sh/@google/genai@^1.8.0",
+    "zod": "https://esm.sh/zod@^3.23.8"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body class="antialiased text-main bg-neutral-50">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
