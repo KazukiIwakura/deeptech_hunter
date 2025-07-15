@@ -85,22 +85,22 @@ export const ChatHistorySidebar: React.FC = () => {
 
   return (
     <aside className={cn(
-        'bg-neutral-900 text-neutral-200 flex flex-col',
+        'bg-text-primary text-white flex flex-col shadow-md',
         'flex-shrink-0 transition-all duration-300 ease-in-out',
-        isOpen ? 'w-72 p-4' : 'w-20 p-2'
+        isOpen ? 'w-64 p-4' : 'w-16 p-2'
       )}>
         <div className="flex-shrink-0 p-2 mb-8">
              <button
                 onClick={handleNewChat}
                 className={cn(
-                    "flex items-center w-full text-left rounded-lg p-2 hover:bg-neutral-800 transition-colors duration-200",
+                    "flex items-center w-full text-left rounded-md p-3 hover:bg-white/10 transition-colors duration-200",
                     !isOpen && "justify-center"
                 )}
                 aria-label="ホームに戻り、新しい探索を開始"
              >
                 <SparklesIcon className="w-8 h-8 text-primary flex-shrink-0" />
-                <div className={cn("flex-1 min-w-0 ml-2", !isOpen && "sr-only")}>
-                    <h1 className={cn('text-[28px] leading-snug font-bold text-main flex items-center', "text-transparent bg-clip-text bg-gradient-to-r from-neutral-200 to-neutral-400 truncate")}>
+                <div className={cn("flex-1 min-w-0 ml-3", !isOpen && "sr-only")}>
+                    <h1 className="text-2xl font-bold text-white truncate">
                         DeepTech Hunter
                     </h1>
                 </div>
@@ -120,21 +120,26 @@ export const ChatHistorySidebar: React.FC = () => {
         </Button>
 
         <div className="flex-1 flex flex-col min-h-0 mt-6">
-            <h2 className={cn("flex-shrink-0 font-bold tracking-wider text-neutral-500 uppercase px-4 mb-2", 'text-sm text-main-light leading-normal', !isOpen && "text-center")}>
+            <h2 className={cn("flex-shrink-0 font-medium text-white/70 px-4 mb-3", 'text-sm', !isOpen && "text-center")}>
                 <span className={!isOpen ? "sr-only" : ""}>チャット履歴</span>
             </h2>
-            <div className="flex-1 overflow-y-auto" style={{ maskImage: 'linear-gradient(to bottom, transparent, black 8px)' }}>
+            <div className="flex-1 overflow-y-auto">
                 <nav className="flex flex-col space-y-1">
                     {sessions.map(session => (
-                        <a
+                        <button
                             key={session.id}
-                            href="#"
-                            onClick={(e) => { e.preventDefault(); handleSelectSession(session.id); }}
-                            className={cn('group flex items-center justify-between px-4 py-2 rounded-lg transition-colors text-sm font-normal', activeId === session.id ? 'bg-primary/20 text-white font-bold' : 'text-neutral-300 hover:bg-neutral-800/60 hover:text-white', !isOpen && 'justify-center')}
-                            title={isOpen ? session.title : ''}
+                            onClick={() => handleSelectSession(session.id)}
+                            className={cn(
+                                'group flex items-center justify-between px-4 py-3 rounded-md transition-colors text-sm font-normal text-left w-full',
+                                activeId === session.id 
+                                    ? 'bg-primary text-white font-medium' 
+                                    : 'text-white/80 hover:bg-white/10 hover:text-white',
+                                !isOpen && 'justify-center'
+                            )}
+                            title={isOpen ? session.title : session.title}
                         >
-                            <MessageSquareIcon className="w-4 h-4 flex-shrink-0 text-neutral-400" />
-                            <span className={cn("flex-1 truncate ml-4", !isOpen && 'sr-only')}>{session.title}</span>
+                            <MessageSquareIcon className="w-4 h-4 flex-shrink-0" />
+                            <span className={cn("flex-1 truncate ml-3", !isOpen && 'sr-only')}>{session.title}</span>
                              <Button
                                 onClick={(e) => handleDelete(e, session.id)}
                                 variant="ghost"
@@ -146,14 +151,14 @@ export const ChatHistorySidebar: React.FC = () => {
                             >
                                 <TrashIcon className="w-4 h-4" />
                             </Button>
-                        </a>
+                        </button>
                     ))}
                 </nav>
             </div>
         </div>
 
-        <footer className="flex-shrink-0 border-t border-neutral-700/50 pt-4 mt-6 space-y-1">
-            <div className={cn('transition-opacity space-y-1', !isOpen && 'opacity-0 h-0 overflow-hidden pointer-events-none')}>
+        <footer className="flex-shrink-0 border-t border-white/20 pt-4 mt-6 space-y-2">
+            <div className={cn('transition-opacity space-y-2', !isOpen && 'opacity-0 h-0 overflow-hidden pointer-events-none')}>
                 <DemoModeToggle isEnabled={isDemoMode} onToggle={onToggleDemoData} isOpen={isOpen} disabled={!isApiKeyConfigured} />
                 <Button
                     onClick={() => handleOpenHowItWorksModal()}
@@ -163,7 +168,7 @@ export const ChatHistorySidebar: React.FC = () => {
                     inverted
                     className="!justify-start px-4"
                 >
-                    <SettingsIcon className="w-4 h-4 mr-3 text-neutral-400 flex-shrink-0" />
+                    <SettingsIcon className="w-4 h-4 mr-3 text-white/60 flex-shrink-0" />
                     <span className="flex-1 text-left">このAIの仕組み</span>
                 </Button>
             </div>
@@ -176,10 +181,10 @@ export const ChatHistorySidebar: React.FC = () => {
                 className={cn("!justify-start px-4", !isOpen && "!justify-center")}
                 aria-label={isOpen ? "サイドバーを縮小する" : "サイドバーを展開する"}
             >
-                {isOpen ? <ChevronLeftIcon className="w-4 h-4 mr-3 text-neutral-400" /> : <ChevronRightIcon className="w-4 h-4 text-neutral-400" />}
+                {isOpen ? <ChevronLeftIcon className="w-4 h-4 mr-3 text-white/60" /> : <ChevronRightIcon className="w-4 h-4 text-white/60" />}
                 <span className={cn("flex-1 text-left", !isOpen && 'sr-only')}>{isOpen ? 'サイドバーを閉じる' : 'サイドバーを開く'}</span>
             </Button>
-            <p className={cn("text-center text-neutral-600 pt-2", 'text-sm text-main-light leading-normal', !isOpen && 'sr-only')}>Powered by Google Gemini API.</p>
+            <p className={cn("text-center text-white/50 pt-2 text-xs", !isOpen && 'sr-only')}>Powered by Google Gemini API</p>
         </footer>
     </aside>
   );

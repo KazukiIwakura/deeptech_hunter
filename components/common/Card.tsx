@@ -9,20 +9,17 @@ interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export const Card: React.FC<CardProps> = ({ children, className, variant = 'default', ...props }) => {
-  const baseClasses = 'border rounded-4xl shadow-sm transition-all duration-300';
+  const baseClasses = 'card transition-all duration-200';
   
-  const colorClasses = 'border-slate-300';
-
   const variantClasses = {
-    default: 'bg-white/70 backdrop-blur-md',
-    opaque: 'bg-white',
+    default: 'bg-bg-primary',
+    opaque: 'bg-bg-primary',
   };
 
   return (
     <div
       className={cn(
         baseClasses,
-        colorClasses,
         variantClasses[variant],
         className
       )}

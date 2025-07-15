@@ -28,31 +28,52 @@ export const DiscoveryZone: React.FC<DiscoveryZoneProps> = ({ suggestions, isLoa
     }
 
     if (error) {
-        return <p className={cn('text-center text-danger-text bg-danger-light p-4 rounded-lg text-sm leading-normal', "text-left")}>{error}</p>
+        return <p className="text-left text-danger-text bg-danger-light p-4 rounded-md text-sm border border-danger/20">{error}</p>
     }
 
     if (suggestions.length === 0) {
-      return <p className="text-sm text-main-lighter leading-normal">提案が見つかりませんでした。更新ボタンで再試行してください。</p>;
+      return <p className="text-sm text-text-tertiary">提案が見つかりませんでした。更新ボタンで再試行してください。</p>;
     }
 
     return (
       <>
-        <div className="flex flex-wrap gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pt-2">
           {suggestions.map((suggestion, index) => (
-            <Button
+            <button
               key={index}
               onClick={() => onSuggestionClick(suggestion)}
-              variant="discovery"
-              size="small"
+              className="group relative bg-bg-primary border border-border-secondary rounded-lg p-4 text-left transition-all duration-200 hover:border-primary hover:shadow-md hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
               aria-label={`${suggestion}で検索する`}
             >
-              {suggestion}
-            </Button>
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-text-primary group-hover:text-primary transition-colors">
+                  {suggestion}
+                </span>
+                <svg 
+                  className="w-4 h-4 text-text-tertiary group-hover:text-primary transition-colors transform group-hover:translate-x-1" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+              <div className="mt-2">
+                <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-primary-light text-primary">
+                  🔍 探索する
+                </span>
+              </div>
+            </button>
           ))}
         </div>
-        <p className={cn('text-sm text-main-light leading-normal', "text-main-lighter mt-6 text-center")}>
-          AIが注目するトレンド分野です。クリックして関連技術を探索してみましょう。
-        </p>
+        <div className="mt-8 p-4 bg-bg-secondary rounded-lg border border-border-secondary">
+          <p className="text-sm text-text-secondary text-center flex items-center justify-center">
+            <svg className="w-4 h-4 mr-2 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            AIが注目するトレンド分野です。カードをクリックして関連技術を探索してみましょう。
+          </p>
+        </div>
       </>
     );
   };
@@ -64,8 +85,8 @@ export const DiscoveryZone: React.FC<DiscoveryZoneProps> = ({ suggestions, isLoa
   return (
     <Card className="w-full mt-16 p-6 animate-fade-in">
       <div className="flex justify-between items-center mb-4">
-        <h2 className={cn('text-[22px] leading-snug font-bold text-main', "flex items-center")}>
-          <LightbulbIcon className="w-6 h-6 mr-4 text-warning" />
+        <h2 className="text-xl font-bold text-text-primary flex items-center">
+          <LightbulbIcon className="w-6 h-6 mr-3 text-warning" />
           AIが提案する未来の金脈
         </h2>
         <Button
