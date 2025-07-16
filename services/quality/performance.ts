@@ -1,207 +1,106 @@
 /**
- * 品質評価システムのパフォーマンス監視とベンチマーク
+ * Performance monitoring for quality assessment system
  */
 
-export interface PerformanceMetrics {
+interface PerformanceMetrics {
   totalTime: number;
   cacheHitRate: number;
-  parallelProcessingTime?: number;
-  sequentialProcessingTime?: number;
   stageGatingEnabled: boolean;
   earlyTermination: boolean;
-  memoryUsage?: number;
 }
 
-export interface BenchmarkResult {
-  testName: string;
-  iterations: number;
-  averageTime: number;
-  minTime: number;
-  maxTime: number;
-  successRate: number;
-  metrics: PerformanceMetrics[];
-}
-
-export class PerformanceMonitor {
-  private metrics: Map<string, PerformanceMetrics[]> = new Map();
+class PerformanceMonitor {
+  private measurements: Map<string, { startTime: number, metrics?: PerformanceMetrics }> = new Map();
   private cacheHits = 0;
   private cacheMisses = 0;
-
+  
   /**
-   * パフォーマンス測定開始
+   * Start measuring performance for a named operation
+   * @param operationName Unique identifier for the operation
+   * @returns Function to call when operation completes
    */
-  startMeasurement(testId: string): (additionalData?: Partial<PerformanceMetrics>) => PerformanceMetrics {
+  startMeasurement(operationName: string) {
     const startTime = performance.now();
-    const startMemory = this.getMemoryUsage();
-
-    return (additionalData: Partial<PerformanceMetrics> = {}): PerformanceMetrics => {
+    this.measurements.set(operationName, { startTime });
+    
+    return (additionalMetrics: Omit<PerformanceMetrics, 'totalTime'>) => {
       const endTime = performance.now();
-      const endMemory = this.getMemoryUsage();
-
+      const totalTime = endTime - startTime;
+      
       const metrics: PerformanceMetrics = {
-        totalTime: endTime - startTime,
-        cacheHitRate: this.getCacheHitRate(),
-        memoryUsage: endMemory - startMemory,
-        stageGatingEnabled: false,
-        earlyTermination: false,
-        ...additionalData
+        totalTime,
+        ...additionalMetrics
       };
-
-      // メトリクスを保存
-      if (!this.metrics.has(testId)) {
-        this.metrics.set(testId, []);
-      }
-      this.metrics.get(testId)!.push(metrics);
-
+      
+      this.measurements.set(operationName, { 
+        startTime, 
+        metrics 
+      });
+      
       return metrics;
     };
   }
-
+  
   /**
-   * キャッシュヒット記録
+   * Record a cache hit
    */
-  recordCacheHit(): void {
+  recordCacheHit() {
     this.cacheHits++;
   }
-
+  
   /**
-   * キャッシュミス記録
+   * Record a cache miss
    */
-  recordCacheMiss(): void {
+  recordCacheMiss() {
     this.cacheMisses++;
   }
-
+  
   /**
-   * キャッシュヒット率取得
+   * Get the current cache hit rate
+   * @returns Cache hit rate as a percentage
    */
   getCacheHitRate(): number {
     const total = this.cacheHits + this.cacheMisses;
-    return total > 0 ? (this.cacheHits / total) * 100 : 0;
+    if (total === 0) return 0;
+    return (this.cacheHits / total) * 100;
   }
-
+  
   /**
-   * メモリ使用量取得（ブラウザ環境では概算）
+   * Get metrics for a specific operation
+   * @param operationName The operation name
+   * @returns Performance metrics or undefined if not found
    */
-  private getMemoryUsage(): number {
-    if (typeof performance !== 'undefined' && 'memory' in performance) {
-      return (performance as any).memory.usedJSHeapSize;
-    }
-    return 0;
+  getMetrics(operationName: string): PerformanceMetrics | undefined {
+    return this.measurements.get(operationName)?.metrics;
   }
-
+  
   /**
-   * 統計情報取得
+   * Get summary of all performance metrics
    */
-  getStats(testId?: string): { [key: string]: any } {
-    if (testId) {
-      const testMetrics = this.metrics.get(testId) || [];
-      return this.calculateStats(testMetrics);
-    }
-
-    const allStats: { [key: string]: any } = {};
-    for (const [id, metrics] of this.metrics.entries()) {
-      allStats[id] = this.calculateStats(metrics);
-    }
-    return allStats;
-  }
-
-  /**
-   * 統計計算
-   */
-  private calculateStats(metrics: PerformanceMetrics[]): any {
-    if (metrics.length === 0) return {};
-
-    const times = metrics.map(m => m.totalTime);
-    const cacheHitRates = metrics.map(m => m.cacheHitRate);
-
-    return {
-      count: metrics.length,
-      averageTime: times.reduce((a, b) => a + b, 0) / times.length,
-      minTime: Math.min(...times),
-      maxTime: Math.max(...times),
-      averageCacheHitRate: cacheHitRates.reduce((a, b) => a + b, 0) / cacheHitRates.length,
-      earlyTerminationRate: (metrics.filter(m => m.earlyTermination).length / metrics.length) * 100
+  getSummary() {
+    const summary = {
+      operations: {} as Record<string, PerformanceMetrics>,
+      cacheHitRate: this.getCacheHitRate(),
+      totalOperations: this.measurements.size
     };
-  }
-
-  /**
-   * ベンチマークテスト実行
-   */
-  async runBenchmark(
-    testName: string,
-    testFunction: () => Promise<any>,
-    iterations: number = 10
-  ): Promise<BenchmarkResult> {
-    const results: PerformanceMetrics[] = [];
-    let successCount = 0;
-
-    console.log(`Starting benchmark: ${testName} (${iterations} iterations)`);
-
-    for (let i = 0; i < iterations; i++) {
-      try {
-        const endMeasurement = this.startMeasurement(`benchmark-${testName}-${i}`);
-        await testFunction();
-        const metrics = endMeasurement();
-        results.push(metrics);
-        successCount++;
-      } catch (error) {
-        console.warn(`Benchmark iteration ${i + 1} failed:`, error);
+    
+    for (const [name, data] of this.measurements.entries()) {
+      if (data.metrics) {
+        summary.operations[name] = data.metrics;
       }
     }
-
-    const times = results.map(r => r.totalTime);
-    const benchmarkResult: BenchmarkResult = {
-      testName,
-      iterations,
-      averageTime: times.length > 0 ? times.reduce((a, b) => a + b, 0) / times.length : 0,
-      minTime: times.length > 0 ? Math.min(...times) : 0,
-      maxTime: times.length > 0 ? Math.max(...times) : 0,
-      successRate: (successCount / iterations) * 100,
-      metrics: results
-    };
-
-    console.log(`Benchmark completed: ${testName}`, {
-      averageTime: `${benchmarkResult.averageTime.toFixed(2)}ms`,
-      successRate: `${benchmarkResult.successRate.toFixed(1)}%`
-    });
-
-    return benchmarkResult;
+    
+    return summary;
   }
-
+  
   /**
-   * パフォーマンスレポート生成
+   * Reset all performance metrics
    */
-  generateReport(): string {
-    const stats = this.getStats();
-    let report = '# 品質評価システム パフォーマンスレポート\n\n';
-
-    report += `## 全体統計\n`;
-    report += `- キャッシュヒット率: ${this.getCacheHitRate().toFixed(1)}%\n`;
-    report += `- 総キャッシュヒット数: ${this.cacheHits}\n`;
-    report += `- 総キャッシュミス数: ${this.cacheMisses}\n\n`;
-
-    for (const [testId, testStats] of Object.entries(stats)) {
-      report += `## ${testId}\n`;
-      report += `- 実行回数: ${testStats.count}\n`;
-      report += `- 平均実行時間: ${testStats.averageTime?.toFixed(2)}ms\n`;
-      report += `- 最短実行時間: ${testStats.minTime?.toFixed(2)}ms\n`;
-      report += `- 最長実行時間: ${testStats.maxTime?.toFixed(2)}ms\n`;
-      report += `- 平均キャッシュヒット率: ${testStats.averageCacheHitRate?.toFixed(1)}%\n`;
-      report += `- 早期終了率: ${testStats.earlyTerminationRate?.toFixed(1)}%\n\n`;
-    }
-
-    return report;
-  }
-
-  /**
-   * メトリクスリセット
-   */
-  reset(): void {
-    this.metrics.clear();
+  reset() {
+    this.measurements.clear();
     this.cacheHits = 0;
     this.cacheMisses = 0;
   }
 }
 
-// グローバルパフォーマンスモニター
 export const performanceMonitor = new PerformanceMonitor();

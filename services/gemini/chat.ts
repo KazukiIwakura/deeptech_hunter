@@ -1,4 +1,3 @@
-
 import { GoogleGenAI, GenerateContentResponse, Chat, Type } from "@google/genai";
 import type { DeepTech } from "../../types";
 import { withRetry, parseJsonFromResponse, getSearchConfig } from './shared';

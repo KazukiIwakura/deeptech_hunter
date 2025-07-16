@@ -1,10 +1,7 @@
-
 import { GenerateContentResponse } from "@google/genai";
 import { z, ZodError } from 'zod';
 import type { Source } from '../../types';
 import { sourceReliabilityAnalyzer } from '../quality/sourceReliability';
-import { responseQualityValidator } from '../quality/responseValidator';
-import { optimizedResponseValidator } from '../quality/optimizedValidator';
 
 /**
  * A utility to retry an async function if it fails.
