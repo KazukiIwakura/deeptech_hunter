@@ -1,14 +1,17 @@
 
 import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
 import type { DeepTech, Source } from "../../types";
-import { withRetry, getSearchConfig, getSourcesFromResponse } from './shared';
+import { withRetry, getSearchConfig, getEnhancedSourcesFromResponse } from './shared';
 import { getDeepDiveSystemInstruction, getDeepDiveSchema } from '../prompts';
+import { responseQualityValidator, type QualityAssessment } from '../quality/responseValidator';
+import { optimizedResponseValidator } from '../quality/optimizedValidator';
 
 
 export type DeepDiveStreamEvent =
   | { type: 'sources'; sources: Source[] }
   | { type: 'status'; message: string }
-  | { type: 'analysisChunk'; chunk: string };
+  | { type: 'analysisChunk'; chunk: string }
+  | { type: 'qualityAssessment'; assessment: QualityAssessment };
 
 /**
  * Executes a two-step deep dive analysis:
@@ -46,10 +49,10 @@ export async function* streamDeepDiveAnalysis(
   }));
 
   const context = gatherResponse.text;
-  const sources = getSourcesFromResponse(gatherResponse);
+  const enhancedSources = getEnhancedSourcesFromResponse(gatherResponse);
   
-  if (sources.length > 0) {
-    yield { type: 'sources', sources };
+  if (enhancedSources.sources.length > 0) {
+    yield { type: 'sources', sources: enhancedSources.sources };
   }
   
   if (!context || context.trim().length < 50) {
@@ -77,10 +80,52 @@ ${context}
       }
   }));
 
+  let fullAnalysisContent = '';
+  
   for await (const chunk of stream) {
     const analysisChunk = chunk.text;
     if (analysisChunk) {
+      fullAnalysisContent += analysisChunk;
       yield { type: 'analysisChunk', chunk: analysisChunk };
+    }
+  }
+
+  // STEP 3: Optimized Quality Assessment
+  yield { type: 'status', message: '分析品質を評価中...' };
+  
+  try {
+    // 最適化された品質評価システムを使用
+    const qualityAssessment = await optimizedResponseValidator.assessTechAnalysisQuality(
+      fullAnalysisContent,
+      enhancedSources.sources,
+      tech.techName
+    );
+    
+    yield { type: 'qualityAssessment', assessment: qualityAssessment };
+    
+    // Log quality metrics for monitoring
+    console.log(`Optimized Quality Assessment for ${tech.techName}:`, {
+      overallScore: qualityAssessment.overallScore,
+      confidence: qualityAssessment.confidence,
+      sourceCount: enhancedSources.sources.length,
+      sourceReliability: enhancedSources.qualityMetrics.averageReliability,
+      processingOptimized: true
+    });
+    
+  } catch (error) {
+    console.warn('Optimized quality assessment failed, falling back to standard assessment:', error);
+    
+    // フォールバック: 標準の品質評価システムを使用
+    try {
+      const fallbackAssessment = responseQualityValidator.assessTechAnalysisQuality(
+        fullAnalysisContent,
+        enhancedSources.sources,
+        tech.techName
+      );
+      yield { type: 'qualityAssessment', assessment: fallbackAssessment };
+    } catch (fallbackError) {
+      console.warn('Fallback quality assessment also failed:', fallbackError);
+      // Continue without failing the entire analysis
     }
   }
 }

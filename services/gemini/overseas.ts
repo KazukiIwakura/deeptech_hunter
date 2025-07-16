@@ -1,7 +1,7 @@
 
 import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
 import type { OverseasStartup, Source } from "../../types";
-import { withRetry, parseJsonFromResponse, getSearchConfig, getSourcesFromResponse } from './shared';
+import { withRetry, parseJsonFromResponse, getSearchConfig, getEnhancedSourcesFromResponse } from './shared';
 import { getOverseasStartupsSystemInstruction } from '../prompts';
 import { USE_DEMO_DATA } from '../../config';
 import * as mock from '../mockData';
@@ -33,10 +33,18 @@ export const getOverseasStartups = async (ai: GoogleGenAI | null, query: string,
             }
         }));
         
-        const sources = getSourcesFromResponse(response);
+        const enhancedSources = getEnhancedSourcesFromResponse(response);
         const startups = parseJsonFromResponse(response.text, overseasStartupArraySchema) ?? [];
         
-        return { startups, sources };
+        // Log quality metrics for monitoring
+        console.log(`Overseas Startups Quality Metrics for "${query}":`, {
+            startupCount: startups.length,
+            sourceCount: enhancedSources.sources.length,
+            sourceReliability: enhancedSources.qualityMetrics.averageReliability,
+            highQualitySources: enhancedSources.qualityMetrics.highQualityCount
+        });
+        
+        return { startups, sources: enhancedSources.sources };
 
     } catch (error) {
         // Gracefully handle cases where JSON is not found or invalid

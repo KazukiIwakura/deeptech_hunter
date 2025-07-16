@@ -6,6 +6,7 @@ import type { Source } from '../../types';
 import { XCircleIcon } from '../icons/XCircleIcon';
 import { Favicon } from '../common/Favicon';
 import { Button } from '../common/Button';
+import { SourceReliabilityBadge } from '../common/SourceReliabilityBadge';
 
 const cn = (...classes: (string | undefined | null | false | 0)[]) => classes.filter(Boolean).join(' ');
 
@@ -69,9 +70,12 @@ export const SourcesPanel: React.FC<SourcesPanelProps> = ({ sources, isOpen, onC
                           <div className="flex items-start gap-4">
                             <Favicon domain={source.domain} className="w-4 h-4 rounded-sm flex-shrink-0 mt-0.5" alt={`${source.domain} favicon`} />
                             <div className="flex-grow">
-                                <p className={cn('text-sm text-main-light leading-normal', "font-semibold text-main group-hover:text-primary break-words")}>
-                                  {hasRealTitle ? source.title : source.domain}
-                                </p>
+                                <div className="flex items-center justify-between">
+                                  <p className={cn('text-sm text-main-light leading-normal', "font-semibold text-main group-hover:text-primary break-words")}>
+                                    {hasRealTitle ? source.title : source.domain}
+                                  </p>
+                                  <SourceReliabilityBadge source={source} />
+                                </div>
                                 {hasRealTitle && (
                                   <p className={cn('text-sm text-main-light leading-normal', "text-main-lighter truncate mt-1")}>
                                     {source.domain}

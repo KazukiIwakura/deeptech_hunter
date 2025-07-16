@@ -84,3 +84,43 @@ export interface DeepDiveAnalysisData {
   keyFlags: KeyFlagsData;
   killerQuestions: string[];
 }
+
+// Quality Assessment Types
+export interface QualityDimension {
+  name: string;
+  score: number;
+  description: string;
+  issues: string[];
+}
+
+export interface QualityAssessment {
+  overallScore: number; // 0-100
+  dimensions: QualityDimension[];
+  recommendations: string[];
+  confidence: 'high' | 'medium' | 'low';
+  needsVerification: boolean;
+}
+
+export interface ReliabilityFactor {
+  type: 'domain_authority' | 'content_type' | 'recency' | 'academic_source';
+  score: number;
+  description: string;
+}
+
+export interface ReliabilityScore {
+  score: number; // 0-100
+  factors: ReliabilityFactor[];
+  category: 'high' | 'medium' | 'low';
+}
+
+// Enhanced Source with reliability information
+export interface EnhancedSource extends Source {
+  reliability?: ReliabilityScore;
+}
+
+// Quality Metrics for API responses
+export interface QualityMetrics {
+  averageReliability: number;
+  highQualityCount: number;
+  recommendations: string[];
+}

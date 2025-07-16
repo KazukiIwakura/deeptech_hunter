@@ -26,8 +26,12 @@ export const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ results, isLoadi
   if (results.length === 0) {
     return (
       <div className={cn('border-l-4 p-6 rounded-2xl', 'bg-neutral-100/70 border-neutral-300 backdrop-blur-sm', "text-center py-16 px-6 border-none")}>
-        <h3 className={cn('text-[22px] leading-snug font-bold text-main', "text-main-light")}>該当なし</h3>
-        <p className={cn('text-base text-main/90 leading-relaxed', "mt-2 text-main-light")}>このキーワードに一致する国内大学の技術は見つかりませんでした。<br/>別のキーワードで再度お試しください。</p>
+        <h3 className={cn('text-[22px] leading-snug font-bold text-main', "text-main-light")}>初回検索で結果が見つかりませんでした</h3>
+        <p className={cn('text-base text-main/90 leading-relaxed', "mt-2 text-main-light")}>
+          このキーワードに関連する技術が見つかりませんでした。<br/>
+          <strong>「さらに調査する」ボタンで追加検索を試すか、</strong><br/>
+          別のキーワードで再度お試しください。
+        </p>
       </div>
     );
   }
