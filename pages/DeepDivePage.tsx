@@ -116,12 +116,14 @@ export const DeepDivePage: React.FC<DeepDivePageProps> = ({ tech }) => {
                             <h1 className={cn('text-[40px] leading-tight md:text-[48px] md:leading-tight font-bold tracking-tight text-main', "mt-1")}>{tech.techName}</h1>
                         </div>
                         
-                        {/* Sub-header with Lab and Sources */}
-                        <div className="flex justify-between items-center flex-wrap gap-x-4 gap-y-2">
+                        {/* Sub-header with Lab */}
+                        <div className="space-y-3">
                             <p className={cn('text-sm text-main-lighter leading-normal')}>
                                 <span className="font-bold text-main-light">関連研究室:</span> {tech.researchLab}
                             </p>
-                            <div className="flex-shrink-0">
+                            
+                            {/* Web Information Sources Button */}
+                            <div className="flex justify-start">
                                 <SourcesButton sources={sources} onClick={() => setIsSourcesPanelOpen(true)} />
                             </div>
                         </div>
