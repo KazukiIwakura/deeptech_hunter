@@ -1,7 +1,7 @@
-
 import { GenerateContentResponse } from "@google/genai";
 import { z, ZodError } from 'zod';
 import type { Source } from '../../types';
+import { sourceReliabilityAnalyzer } from '../quality/sourceReliability';
 
 /**
  * A utility to retry an async function if it fails.
@@ -105,4 +105,30 @@ export const getSourcesFromResponse = (response: GenerateContentResponse): Sourc
         }
         return acc;
     }, []);
+};
+
+/**
+ * Enhanced source processing with reliability scoring
+ */
+export const getEnhancedSourcesFromResponse = (response: GenerateContentResponse): {
+    sources: Source[];
+    qualityMetrics: {
+        averageReliability: number;
+        highQualityCount: number;
+        recommendations: string[];
+    };
+} => {
+    const sources = getSourcesFromResponse(response);
+    
+    // Analyze source reliability
+    const sourceEvaluation = sourceReliabilityAnalyzer.evaluateSourceSet(sources);
+    
+    return {
+        sources,
+        qualityMetrics: {
+            averageReliability: sourceEvaluation.overallReliability,
+            highQualityCount: sourceEvaluation.highQualitySources,
+            recommendations: sourceEvaluation.recommendations
+        }
+    };
 };

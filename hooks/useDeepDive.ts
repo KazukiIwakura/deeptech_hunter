@@ -2,7 +2,7 @@
 import { useReducer, useCallback } from 'react';
 import { streamDeepDiveAnalysis } from '../services/geminiService';
 import type { DeepDiveStreamEvent } from '../services/gemini/deepdive';
-import type { DeepTech, Source, DeepDiveAnalysisData } from '../types';
+import type { DeepTech, Source, DeepDiveAnalysisData, QualityAssessment } from '../types';
 import * as mock from '../services/mockData';
 import { parseJsonFromResponse } from '../services/gemini/shared';
 import type { GoogleGenAI } from '@google/genai';
@@ -14,6 +14,7 @@ interface DeepDiveState {
     analysisJsonString: string;
     deepDiveAnalysis: DeepDiveAnalysisData | null;
     deepDiveSources: Source[];
+    qualityAssessment: QualityAssessment | null;
     isStreaming: boolean;
     statusMessage: string;
     deepDiveError: string | null;
@@ -27,6 +28,7 @@ type DeepDiveAction =
     | { type: 'SET_SOURCES'; payload: Source[] }
     | { type: 'SET_STATUS_MESSAGE', payload: string }
     | { type: 'SET_ERROR'; payload: string }
+    | { type: 'SET_QUALITY_ASSESSMENT'; payload: QualityAssessment }
     | { type: 'FINISH_STREAMING'; payload: { jsonString: string } };
 
 // 2. Initial State
@@ -35,6 +37,7 @@ const initialState: DeepDiveState = {
     analysisJsonString: '',
     deepDiveAnalysis: null,
     deepDiveSources: [],
+    qualityAssessment: null,
     isStreaming: false,
     statusMessage: '',
     deepDiveError: null,
@@ -78,6 +81,8 @@ const deepDiveReducer = (state: DeepDiveState, action: DeepDiveAction): DeepDive
             return { ...state, statusMessage: action.payload };
         case 'SET_ERROR':
             return { ...state, deepDiveError: `詳細情報の取得に失敗しました: ${action.payload}`, isStreaming: false };
+        case 'SET_QUALITY_ASSESSMENT':
+            return { ...state, qualityAssessment: action.payload };
         case 'FINISH_STREAMING': {
             const jsonString = action.payload.jsonString;
             try {
@@ -134,6 +139,9 @@ export const useDeepDive = (ai: GoogleGenAI | null, useDemoData: boolean) => {
                     case 'analysisChunk':
                         finalJsonString += event.chunk;
                         dispatch({ type: 'ADD_ANALYSIS_CHUNK', payload: event.chunk });
+                        break;
+                    case 'qualityAssessment':
+                        dispatch({ type: 'SET_QUALITY_ASSESSMENT', payload: event.assessment });
                         break;
                 }
             }

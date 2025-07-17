@@ -1,5 +1,5 @@
 
-import type { DeepTech, Source, OverseasStartup, TechExplanationData, DeepDiveAnalysisData } from '../types';
+import type { DeepTech, Source, OverseasStartup, TechExplanationData, DeepDiveAnalysisData, QualityAssessment } from '../types';
 import type { Chat, GenerateContentResponse } from "@google/genai";
 import type { DeepDiveStreamEvent } from './gemini/deepdive';
 
@@ -203,6 +203,43 @@ export const mockChatSuggestions: string[] = [
   "量産時の品質安定性確保について、具体的な技術的根拠を教えてください。"
 ];
 
+// For Quality Assessment (QualityAssessment)
+export const mockQualityAssessment: QualityAssessment = {
+  overallScore: 82,
+  dimensions: [
+    {
+      name: 'ソース信頼性',
+      score: 85,
+      description: '4個のソースから情報を収集。高品質ソース: 3個',
+      issues: []
+    },
+    {
+      name: 'コンテンツ完全性',
+      score: 78,
+      description: '分析内容の包括性と必須要素の網羅度',
+      issues: ['具体的な数値データが不足']
+    },
+    {
+      name: '論理的一貫性',
+      score: 85,
+      description: '分析内容の論理的整合性と構造',
+      issues: []
+    },
+    {
+      name: '具体性・詳細度',
+      score: 80,
+      description: '分析内容の具体性と詳細度',
+      issues: []
+    }
+  ],
+  recommendations: [
+    '追加の数値データや統計情報を含めることで分析の説得力を向上',
+    '競合他社との定量的比較データを追加することを推奨'
+  ],
+  confidence: 'high',
+  needsVerification: false
+};
+
 
 // Stream generators
 export async function* mockTechStream(): AsyncGenerator<DeepTech, void, unknown> {
@@ -229,4 +266,9 @@ export async function* mockDeepDiveStream(): AsyncGenerator<DeepDiveStreamEvent,
     yield { type: 'analysisChunk', chunk };
     await new Promise(resolve => setTimeout(resolve, 20));
   }
+
+  // 4. Simulate quality assessment
+  yield { type: 'status', message: '分析品質を評価中...' };
+  await new Promise(res => setTimeout(res, 500));
+  yield { type: 'qualityAssessment', assessment: mockQualityAssessment };
 }

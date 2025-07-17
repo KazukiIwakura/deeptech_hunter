@@ -7,3 +7,10 @@
  * false: 実際のGemini APIに接続します (APIキーが必要)。
  */
 export const USE_DEMO_DATA = true;
+
+/**
+ * AIの最終出力言語設定
+ * 'ja': 日本語で出力
+ * 'en': 英語で出力
+ */
+export const OUTPUT_LANGUAGE = 'ja';

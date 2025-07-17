@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:performance": "tsx scripts/test-performance.ts",
+    "benchmark:quality": "tsx services/quality/benchmark-runner.ts"
   },
   "dependencies": {
     "react-dom": "^19.1.0",

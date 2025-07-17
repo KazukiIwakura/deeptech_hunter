@@ -299,7 +299,7 @@ export const ResultsPage: React.FC = () => {
                       追加調査中...
                   </>
                   ) : (
-                  'さらに調査する'
+                  results.length === 0 ? '別の方法で調査する' : 'さらに調査する'
                   )}
               </Button>
             ) : (

@@ -14,6 +14,7 @@ import { KillerQuestions } from '../components/deepdive/KillerQuestions';
 import { AnalysisSection } from '../components/deepdive/AnalysisSection';
 import { Card } from '../components/common/Card';
 import { Button } from '../components/common/Button';
+import { QualityIndicator } from '../components/common/QualityIndicator';
 
 const cn = (...classes: (string | undefined | null | false | 0)[]) => classes.filter(Boolean).join(' ');
 
@@ -74,6 +75,17 @@ export const DeepDivePage: React.FC<DeepDivePageProps> = ({ tech }) => {
                 {analysis.keyFlags && <KeyFlags data={analysis.keyFlags} />}
                 
                 {analysis.killerQuestions && <KillerQuestions data={analysis.killerQuestions} />}
+                
+                {/* Detailed Quality Assessment Section */}
+                {deepDive.qualityAssessment && (
+                    <div className="mt-12 border-t border-neutral-200 pt-8">
+                        <h2 className="text-xl font-bold text-main mb-4">分析品質評価</h2>
+                        <QualityIndicator 
+                            assessment={deepDive.qualityAssessment} 
+                            compact={false} 
+                        />
+                    </div>
+                )}
             </div>
         );
     };
@@ -113,6 +125,16 @@ export const DeepDivePage: React.FC<DeepDivePageProps> = ({ tech }) => {
                                 <SourcesButton sources={sources} onClick={() => setIsSourcesPanelOpen(true)} />
                             </div>
                         </div>
+                        
+                        {/* Quality Indicator (compact mode) */}
+                        {deepDive.qualityAssessment && !isStreaming && (
+                            <div className="mt-4">
+                                <QualityIndicator 
+                                    assessment={deepDive.qualityAssessment} 
+                                    compact={true} 
+                                />
+                            </div>
+                        )}
                     </div>
                     
                     <div className="p-6 md:p-8">
