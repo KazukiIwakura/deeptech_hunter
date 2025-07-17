@@ -36,7 +36,11 @@ export const withRetry = async <T>(apiCall: () => Promise<T>, retries = 3, initi
  * @returns The parsed and validated data.
  * @throws An error if parsing or validation fails.
  */
-export const parseJsonFromResponse = <T>(text: string, schema: z.Schema<T>): T => {
+export const parseJsonFromResponse = <T>(text: string | undefined, schema: z.Schema<T>): T => {
+    if (!text) {
+        throw new Error(`AIからの応答が空でした。`);
+    }
+    
     let jsonStr = text.trim();
     // This regex looks for a JSON block inside markdown-style code fences (```json ... ```)
     const fenceRegex = /```(?:json)?\s*([\s\S]*?)\s*```/s;

@@ -1,5 +1,4 @@
 import { GoogleGenAI, GenerateContentResponse, Chat, Type } from "@google/genai";
-import type { DeepTech } from "../../types";
 import { withRetry, parseJsonFromResponse, getSearchConfig } from './shared';
 import * as prompts from '../prompts';
 import { USE_DEMO_DATA } from '../../config';
@@ -67,11 +66,11 @@ export const createDeepDiveChat = (ai: GoogleGenAI | null, techName: string, ini
         console.error("Cannot create chat session, API client is not initialized.");
         return null;
     }
-    
+
     const systemInstructionWithContext = `
 ${prompts.getChatSystemInstruction()}
 
-以下は、対話の前提となる初期分析レポートです。
+以下は、「${techName}」技術に関する初期分析レポートです。
 ---
 ${initialAnalysis}
 ---
