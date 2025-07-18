@@ -29,7 +29,7 @@ export async function* streamDeepDiveAnalysis(
 ): AsyncGenerator<DeepDiveStreamEvent> {
   
   // STEP 1: Gather information using Google Search
-  yield { type: 'status', message: 'Web調査による情報収集を開始...' };
+  yield { type: 'status', message: `🔍 "${tech.techName}" について Web調査を開始...` };
   
   const gatherPrompt = `
 以下の技術について、VC（ベンチャーキャピタリスト）が投資評価を行うために必要な情報を、ウェブから包括的に収集・要約してください。
@@ -52,6 +52,7 @@ export async function* streamDeepDiveAnalysis(
   const enhancedSources = getEnhancedSourcesFromResponse(gatherResponse);
   
   if (enhancedSources.sources.length > 0) {
+    yield { type: 'status', message: `📚 ${enhancedSources.sources.length}件の信頼できる情報源を発見` };
     yield { type: 'sources', sources: enhancedSources.sources };
   }
   
@@ -60,7 +61,7 @@ export async function* streamDeepDiveAnalysis(
   }
 
   // STEP 2: Structure the gathered information into a JSON report
-  yield { type: 'status', message: '収集した情報を基に、VC視点での評価レポートを生成中...' };
+  yield { type: 'status', message: '🧠 収集した情報を分析し、VC評価レポートを生成中...' };
 
   const structurePrompt = `
 以下のコンテキスト情報に厳密に基づいて、VC評価レポートを生成してください。
@@ -81,17 +82,38 @@ ${context}
   }));
 
   let fullAnalysisContent = '';
+  let chunkCount = 0;
   
   for await (const chunk of stream) {
     const analysisChunk = chunk.text;
     if (analysisChunk) {
       fullAnalysisContent += analysisChunk;
+      chunkCount++;
+      
+      // Provide dynamic status updates based on content
+      if (chunkCount % 5 === 0) {
+        const currentContent = fullAnalysisContent.toLowerCase();
+        if (currentContent.includes('scorecard') && !currentContent.includes('summary')) {
+          yield { type: 'status', message: '📊 投資スコアカードを生成中...' };
+        } else if (currentContent.includes('summary') && !currentContent.includes('potentialimpact')) {
+          yield { type: 'status', message: '📝 投資仮説サマリーを作成中...' };
+        } else if (currentContent.includes('potentialimpact') && !currentContent.includes('marketrisk')) {
+          yield { type: 'status', message: '💰 ポテンシャルインパクトを評価中...' };
+        } else if (currentContent.includes('marketrisk') && !currentContent.includes('techrisk')) {
+          yield { type: 'status', message: '📈 市場リスクを分析中...' };
+        } else if (currentContent.includes('techrisk') && !currentContent.includes('keyflags')) {
+          yield { type: 'status', message: '🔬 技術リスクを評価中...' };
+        } else if (currentContent.includes('keyflags')) {
+          yield { type: 'status', message: '🚩 重要な投資判断ポイントを整理中...' };
+        }
+      }
+      
       yield { type: 'analysisChunk', chunk: analysisChunk };
     }
   }
 
   // STEP 3: Optimized Quality Assessment
-  yield { type: 'status', message: '分析品質を評価中...' };
+  yield { type: 'status', message: '✅ 分析品質を評価し、信頼性スコアを算出中...' };
   
   try {
     // 最適化された品質評価システムを使用
