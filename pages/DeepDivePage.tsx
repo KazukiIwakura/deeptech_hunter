@@ -12,6 +12,7 @@ import { Scorecard } from '../components/deepdive/Scorecard';
 import { KeyFlags } from '../components/deepdive/KeyFlags';
 import { KillerQuestions } from '../components/deepdive/KillerQuestions';
 import { AnalysisSection } from '../components/deepdive/AnalysisSection';
+import { StreamingAnalysisDisplay } from '../components/deepdive/StreamingAnalysisDisplay';
 import { Card } from '../components/common/Card';
 import { Button } from '../components/common/Button';
 import { QualityIndicator } from '../components/common/QualityIndicator';
@@ -29,15 +30,29 @@ export const DeepDivePage: React.FC<DeepDivePageProps> = ({ tech }) => {
     const [isSourcesPanelOpen, setIsSourcesPanelOpen] = useState(false);
     
     const renderBody = () => {
-        if (isStreaming && !analysis) {
+        if (isStreaming) {
              return (
-                <div className="flex flex-col items-center justify-center text-center py-16">
-                    <div className="relative w-20 h-20">
-                        <div className="absolute inset-0 border-neutral-200 rounded-full"></div>
-                        <div className="absolute inset-0 border-4 border-t-transparent border-primary rounded-full animate-spin"></div>
+                <div className="space-y-6">
+                    {/* Real-time Status Display */}
+                    <div className="flex items-center space-x-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                        <div className="relative w-6 h-6">
+                            <div className="absolute inset-0 border-2 border-t-transparent border-blue-500 rounded-full animate-spin"></div>
+                        </div>
+                        <div className="flex-1">
+                            <p className="text-sm font-medium text-blue-900">{statusMessage || 'AIが分析中...'}</p>
+                            <p className="text-xs text-blue-700 mt-1">リアルタイムで分析結果を表示しています</p>
+                        </div>
                     </div>
-                    <p className={cn('text-lg leading-snug font-bold text-main', "tracking-wide text-main-light mt-6")}>{statusMessage || 'AIが分析中...'}</p>
-                    <p className="text-sm text-main-lighter leading-normal">VCの視点でビジネス評価レポートを生成しています</p>
+
+                    {/* Streaming Analysis Results */}
+                    {deepDive.analysisJsonString && (
+                        <div className="space-y-6">
+                            <StreamingAnalysisDisplay 
+                                jsonString={deepDive.analysisJsonString}
+                                isComplete={!isStreaming}
+                            />
+                        </div>
+                    )}
                 </div>
              );
         }
@@ -116,12 +131,14 @@ export const DeepDivePage: React.FC<DeepDivePageProps> = ({ tech }) => {
                             <h1 className={cn('text-[40px] leading-tight md:text-[48px] md:leading-tight font-bold tracking-tight text-main', "mt-1")}>{tech.techName}</h1>
                         </div>
                         
-                        {/* Sub-header with Lab and Sources */}
-                        <div className="flex justify-between items-center flex-wrap gap-x-4 gap-y-2">
+                        {/* Sub-header with Lab */}
+                        <div className="space-y-3">
                             <p className={cn('text-sm text-main-lighter leading-normal')}>
                                 <span className="font-bold text-main-light">関連研究室:</span> {tech.researchLab}
                             </p>
-                            <div className="flex-shrink-0">
+                            
+                            {/* Web Information Sources Button */}
+                            <div className="flex justify-start">
                                 <SourcesButton sources={sources} onClick={() => setIsSourcesPanelOpen(true)} />
                             </div>
                         </div>

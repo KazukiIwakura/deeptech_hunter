@@ -327,6 +327,18 @@ body {
     animation: slideUp 0.3s ease-out;
 }
 
+.animate-stream-in {
+    animation: streamIn 0.4s ease-out;
+}
+
+.animate-pulse-subtle {
+    animation: pulseSubtle 2s ease-in-out infinite;
+}
+
+.animate-typing {
+    animation: typing 1.5s steps(40, end) infinite;
+}
+
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -345,6 +357,107 @@ body {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+@keyframes streamIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes pulseSubtle {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+@keyframes typing {
+    0%, 50% {
+        opacity: 1;
+    }
+    51%, 100% {
+        opacity: 0.3;
+    }
+}
+
+/* ストリーミング専用スタイル */
+.streaming-status {
+    background: linear-gradient(135deg, #f0f7ff 0%, #e6f2ff 100%);
+    border: 1px solid rgba(0, 102, 204, 0.2);
+    border-radius: var(--radius-lg);
+    position: relative;
+    overflow: hidden;
+}
+
+.streaming-status::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(0, 102, 204, 0.6), transparent);
+    animation: streamingProgress 2s linear infinite;
+}
+
+@keyframes streamingProgress {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+.streaming-content {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+    border: 1px solid rgba(0, 102, 204, 0.1);
+    border-radius: var(--radius-lg);
+    backdrop-filter: blur(4px);
+    position: relative;
+}
+
+.streaming-content.incomplete {
+    border-style: dashed;
+    border-color: rgba(0, 102, 204, 0.3);
+}
+
+.streaming-content.incomplete::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0, 102, 204, 0.4), transparent);
+    animation: streamingProgress 1.5s linear infinite;
+}
+
+.thought-bubble {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border: 1px solid rgba(148, 163, 184, 0.3);
+    border-radius: var(--radius-lg);
+    position: relative;
+    font-style: italic;
+    color: var(--color-text-secondary);
+}
+
+.thought-bubble::before {
+    content: '💭';
+    position: absolute;
+    left: -8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    opacity: 0.7;
 }
 
 /* モーダル専用スタイル - 超モダンデザイン */
