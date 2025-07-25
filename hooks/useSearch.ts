@@ -7,6 +7,7 @@ import {
 } from '../services/geminiService';
 import type { DeepTech, Source, OverseasStartup, TechExplanationData } from '../types';
 import type { GoogleGenAI } from '@google/genai';
+import { useApiUsageMonitor } from '@/hooks/useApiUsageMonitor';
 
 // 1. State and Action Types
 interface SearchState {
@@ -118,6 +119,7 @@ const searchReducer = (state: SearchState, action: SearchAction): SearchState =>
  */
 export const useSearch = (ai: GoogleGenAI | null, useDemoData: boolean) => {
     const [state, dispatch] = useReducer(searchReducer, initialState);
+    const { trackApiCall } = useApiUsageMonitor();
 
     const reset = useCallback(() => dispatch({ type: 'RESET' }), []);
 
@@ -129,6 +131,18 @@ export const useSearch = (ai: GoogleGenAI | null, useDemoData: boolean) => {
         }
 
         dispatch({ type: 'START_SEARCH', payload: { query } });
+        
+        // 使用量制限チェック（デモモードでない場合のみ）
+        if (!useDemoData) {
+            // 3つのAPIコールが発生するため、3回チェック
+            if (!trackApiCall() || !trackApiCall() || !trackApiCall()) {
+                dispatch({ type: 'SET_DOMESTIC_RESULT', payload: { results: [], sources: [], error: 'API使用制限に達しています。' } });
+                dispatch({ type: 'SET_EXPLANATION_RESULT', payload: { data: null, error: 'API使用制限に達しています。' } });
+                dispatch({ type: 'SET_OVERSEAS_RESULT', payload: { startups: [], sources: [], error: 'API使用制限に達しています。' } });
+                dispatch({ type: 'SEARCH_DONE' });
+                return;
+            }
+        }
         
         await Promise.allSettled([
             getTechExplanation(ai, query, useDemoData)
@@ -154,6 +168,15 @@ export const useSearch = (ai: GoogleGenAI | null, useDemoData: boolean) => {
         }
 
         dispatch({ type: 'START_SEARCH_MORE' });
+
+        // 使用量制限チェック（デモモードでない場合のみ）
+        if (!useDemoData) {
+            // 2つのAPIコールが発生するため、2回チェック
+            if (!trackApiCall() || !trackApiCall()) {
+                dispatch({ type: 'SEARCH_MORE_DONE', payload: { newResultsCount: 0, newStartupsCount: 0, hasError: true } });
+                return;
+            }
+        }
 
         const [domesticResult, overseasResult] = await Promise.allSettled([
              (async () => {

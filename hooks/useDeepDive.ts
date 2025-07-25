@@ -7,6 +7,7 @@ import * as mock from '../services/mockData';
 import { parseJsonFromResponse } from '../services/gemini/shared';
 import type { GoogleGenAI } from '@google/genai';
 import { deepDiveAnalysisSchema } from '../services/zodSchemas';
+import { useApiUsageMonitor } from '@/hooks/useApiUsageMonitor';
 
 // 1. State and Action Types
 interface DeepDiveState {
@@ -108,6 +109,7 @@ const deepDiveReducer = (state: DeepDiveState, action: DeepDiveAction): DeepDive
  */
 export const useDeepDive = (ai: GoogleGenAI | null, useDemoData: boolean) => {
     const [state, dispatch] = useReducer(deepDiveReducer, initialState);
+    const { trackApiCall } = useApiUsageMonitor();
 
     const reset = useCallback(() => dispatch({ type: 'RESET' }), []);
 
@@ -121,6 +123,12 @@ export const useDeepDive = (ai: GoogleGenAI | null, useDemoData: boolean) => {
             return;
         }
         dispatch({ type: 'START', payload: { tech, message: '分析を開始...' } });
+
+        // 使用量制限チェック（デモモードでない場合のみ）
+        if (!useDemoData && !trackApiCall()) {
+            dispatch({ type: 'SET_ERROR', payload: 'API使用制限に達しています。' });
+            return;
+        }
 
         let finalJsonString = '';
         try {

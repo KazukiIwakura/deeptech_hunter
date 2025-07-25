@@ -2,12 +2,32 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { getDiscoverySuggestions } from '../services/geminiService';
 import { USE_DEMO_DATA } from '../config';
+import { encryptApiKey, decryptApiKey, validateApiKeyFormat } from '@/utils/encryption';
+import { useApiUsageMonitor } from '@/hooks/useApiUsageMonitor';
 
 export const useAppShell = () => {
+    // --- Usage Monitoring ---
+    const { usage, limits, trackApiCall, resetUsage, isLimitReached } = useApiUsageMonitor();
     // --- API Key Management ---
     const [userApiKey, _setUserApiKey] = useState<string | null>(() => {
         try {
-            return localStorage.getItem('userApiKey');
+            const encryptedKey = localStorage.getItem('userApiKey');
+            if (!encryptedKey) return null;
+            
+            // 新形式での復号化を試行
+            let decryptedKey = decryptApiKey(encryptedKey);
+            
+            // 復号化に失敗した場合、旧形式からの移行を試行
+            if (!decryptedKey) {
+                const { migrateOldEncryption } = require('@/utils/encryption');
+                const migratedKey = migrateOldEncryption(encryptedKey);
+                if (migratedKey) {
+                    localStorage.setItem('userApiKey', migratedKey);
+                    decryptedKey = decryptApiKey(migratedKey);
+                }
+            }
+            
+            return decryptedKey;
         } catch (e) {
             console.error("Could not access localStorage:", e);
             return null;
@@ -22,9 +42,20 @@ export const useAppShell = () => {
     const setUserApiKey = useCallback((key: string) => {
         if (key && key.trim()) {
             const trimmedKey = key.trim();
-            localStorage.setItem('userApiKey', trimmedKey);
+            
+            // APIキー形式の検証
+            if (!validateApiKeyFormat(trimmedKey)) {
+                alert('無効なAPIキー形式です。Gemini APIキーは "AIza" で始まる39文字の文字列である必要があります。');
+                return false;
+            }
+            
+            // 暗号化して保存
+            const encryptedKey = encryptApiKey(trimmedKey);
+            localStorage.setItem('userApiKey', encryptedKey);
             _setUserApiKey(trimmedKey);
+            return true;
         }
+        return false;
     }, []);
 
     const clearUserApiKey = useCallback(() => {
@@ -78,6 +109,13 @@ export const useAppShell = () => {
         }
 
         try {
+          // 使用量制限チェック（デモモードでない場合のみ）
+          if (!demoMode && !trackApiCall()) {
+            setDiscoveryError('API使用制限に達しています。');
+            setIsDiscoveryLoading(false);
+            return;
+          }
+
           const suggestions = await getDiscoverySuggestions(tempApiKey, demoMode);
           if (suggestions.length === 0) setDiscoveryError("AIから有効な提案を取得できませんでした。");
           setDiscoverySuggestions(suggestions);
@@ -155,6 +193,11 @@ export const useAppShell = () => {
         isHowItWorksModalOpen,
         initialModalTab,
         discoverySuggestions,
+        // 使用量監視関連
+        usage,
+        limits,
+        isLimitReached,
+        resetUsage,
         isDiscoveryLoading,
         discoveryError,
         setUserApiKey,
