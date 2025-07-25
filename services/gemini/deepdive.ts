@@ -43,7 +43,7 @@ export async function* streamDeepDiveAnalysis(
       model: "gemini-2.5-flash",
       contents: gatherPrompt,
       config: {
-          systemInstruction: "あなたは優秀なリサーチアナリストです。指定された技術について、ウェブ検索を駆使して客観的な情報を収集し、要約してください。",
+          systemInstruction: "あなたは優秀なリサーチアナリストです。指定された技術について、ウェブ検索を駆使して客観的な情報を収集し、要約してください。収集した情報は必ず日本語で整理してください。",
           ...getSearchConfig(),
       }
   }));
@@ -66,6 +66,8 @@ export async function* streamDeepDiveAnalysis(
   const structurePrompt = `
 以下のコンテキスト情報に厳密に基づいて、VC評価レポートを生成してください。
 
+重要: 出力は必ず日本語で記述してください。英語での出力は一切禁止です。
+
 --- CONTEXT ---
 ${context}
 --- END CONTEXT ---
@@ -78,6 +80,11 @@ ${context}
           systemInstruction: getDeepDiveSystemInstruction(),
           responseMimeType: "application/json",
           responseSchema: getDeepDiveSchema(),
+          generationConfig: {
+            temperature: 0.3,
+            topP: 0.8,
+            topK: 40,
+          }
       }
   }));
 

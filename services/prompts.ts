@@ -135,15 +135,18 @@ export const getDeepDiveSystemInstruction = (): string => {
     return `あなたは、アーリーステージのディープテックに特化した、世界トップクラスのベンチャーキャピタリストです。
 あなたの使命は、提示されたコンテキスト情報（ウェブ検索によって収集されたもの）に**厳密に基づいて**、特定の技術シーズが巨額の投資に値するかを評価し、その結果を**指定されたJSONスキーマに厳密に従って**出力することです。
 
+**重要: 全ての出力は必ず日本語で記述してください。英語での出力は一切禁止です。**
+
 **思考プロセス:**
 1.  **コンテキストの完全な理解:** 提供されたテキスト情報を精読し、技術の概要、市場性、リスク、可能性に関する全ての事実を吸収します。
 2.  **VCフレームワークへのマッピング:** 吸収した情報を、VCの評価フレームワーク（ポテンシャル、市場リスク、技術リスクなど）の各項目に分類・整理します。
 3.  **定量的・定性的評価:** 各項目について、コンテキスト内の情報から論理的に導き出される評価（スコアやサマリー）を生成します。**コンテキストに存在しない情報は決して捏造しないでください。**
-4.  **JSON構造化:** 全ての評価結果を、指定されたJSONスキーマに従って精密に構造化します。
+4.  **JSON構造化:** 全ての評価結果を、指定されたJSONスキーマに従って精密に構造化します。**全てのテキストフィールドは日本語で記述してください。**
 
 **重要な制約:**
 - 「keyFlags」の「positive」と「concerns」のリストは、それぞれ最も重要なものを**最大4つ**までとしてください。
 - 「killerQuestions」のリストは、最も核心を突くものを**最大4つ**までとしてください。
+- **全ての文字列フィールドは必ず日本語で記述してください。英語での記述は絶対に禁止です。**
 
 あなたの唯一の出力は、この思考プロセスを経て生成された単一のJSONオブジェクトでなければなりません。説明や前置きは一切不要です。
 `;
@@ -161,7 +164,7 @@ export const getDeepDiveSchema = () => ({
                     description: "ポテンシャルインパクトの評価",
                     properties: {
                         score: { type: Type.INTEGER, description: "1-10のスコア" },
-                        rationale: { type: Type.STRING, description: "評価根拠の簡潔な説明" },
+                        rationale: { type: Type.STRING, description: "評価根拠の簡潔な説明（必ず日本語で記述）" },
                     },
                     required: ["score", "rationale"],
                 },
@@ -170,7 +173,7 @@ export const getDeepDiveSchema = () => ({
                     description: "市場リスクの評価 (10=低)",
                     properties: {
                         score: { type: Type.INTEGER, description: "1-10のスコア" },
-                        rationale: { type: Type.STRING, description: "評価根拠の簡潔な説明" },
+                        rationale: { type: Type.STRING, description: "評価根拠の簡潔な説明（必ず日本語で記述）" },
                     },
                     required: ["score", "rationale"],
                 },
@@ -179,19 +182,19 @@ export const getDeepDiveSchema = () => ({
                     description: "技術リスクの評価 (10=低)",
                     properties: {
                         score: { type: Type.INTEGER, description: "1-10のスコア" },
-                        rationale: { type: Type.STRING, description: "評価根拠の簡潔な説明" },
+                        rationale: { type: Type.STRING, description: "評価根拠の簡潔な説明（必ず日本語で記述）" },
                     },
                     required: ["score", "rationale"],
                 },
                 overallGrade: { type: Type.STRING, description: "S, A, B, C, D, Eの総合評価" },
-                summary: { type: Type.STRING, description: "2-3文での総括" },
+                summary: { type: Type.STRING, description: "2-3文での総括（必ず日本語で記述）" },
             },
             required: ["potentialImpact", "marketRisk", "techRisk", "overallGrade", "summary"],
         },
         summary: {
             type: Type.OBJECT,
             properties: {
-                content: { type: Type.STRING, description: "投資仮説のサマリー。Markdown形式で記述してください。" }
+                content: { type: Type.STRING, description: "投資仮説のサマリー。必ず日本語でMarkdown形式で記述してください。" }
             },
             required: ["content"],
         },
@@ -199,9 +202,9 @@ export const getDeepDiveSchema = () => ({
             type: Type.OBJECT,
             description: "ポテンシャルインパクトの評価（想定利益）に関する詳細な分析",
             properties: {
-                problemAndMarketSize: { type: Type.STRING, description: "この技術が解決する課題と、関連する市場規模について。Markdown形式で記述。" },
-                monopolyPotential: { type: Type.STRING, description: "この技術が持つ独占的な地位を築く可能性について。Markdown形式で記述。" },
-                profitModel: { type: Type.STRING, description: "考えられる利益創出モデルについて。Markdown形式で記述。" }
+                problemAndMarketSize: { type: Type.STRING, description: "この技術が解決する課題と、関連する市場規模について。必ず日本語でMarkdown形式で記述。" },
+                monopolyPotential: { type: Type.STRING, description: "この技術が持つ独占的な地位を築く可能性について。必ず日本語でMarkdown形式で記述。" },
+                profitModel: { type: Type.STRING, description: "考えられる利益創出モデルについて。必ず日本語でMarkdown形式で記述。" }
             },
             required: ["problemAndMarketSize", "monopolyPotential", "profitModel"]
         },
@@ -209,9 +212,9 @@ export const getDeepDiveSchema = () => ({
             type: Type.OBJECT,
             description: "市場リスクの評価（P(事業成功|製品供給成功)）に関する詳細な分析",
             properties: {
-                customerPain: { type: Type.STRING, description: "顧客が抱えるペイン（課題）の深さについて。Markdown形式で記述。" },
-                competition: { type: Type.STRING, description: "競合や代替品との比較分析。Markdown形式で記述。" },
-                businessBarriers: { type: Type.STRING, description: "事業化における障壁（規制、投資など）。Markdown形式で記述。" }
+                customerPain: { type: Type.STRING, description: "顧客が抱えるペイン（課題）の深さについて。必ず日本語でMarkdown形式で記述。" },
+                competition: { type: Type.STRING, description: "競合や代替品との比較分析。必ず日本語でMarkdown形式で記述。" },
+                businessBarriers: { type: Type.STRING, description: "事業化における障壁（規制、投資など）。必ず日本語でMarkdown形式で記述。" }
             },
             required: ["customerPain", "competition", "businessBarriers"]
         },
@@ -219,9 +222,9 @@ export const getDeepDiveSchema = () => ({
             type: Type.OBJECT,
             description: "技術リスクの評価（P(製品供給成功)）に関する詳細な分析",
             properties: {
-                technicalChallenge: { type: Type.STRING, description: "実用化に向けた技術的な挑戦課題。Markdown形式で記述。" },
-                trlAndTrackRecord: { type: Type.STRING, description: "現在の技術成熟度レベル（TRL）と、研究チームの実績。Markdown形式で記述。" },
-                ipPortfolio: { type: Type.STRING, description: "関連する知的財産（特許など）の状況。Markdown形式で記述。" }
+                technicalChallenge: { type: Type.STRING, description: "実用化に向けた技術的な挑戦課題。必ず日本語でMarkdown形式で記述。" },
+                trlAndTrackRecord: { type: Type.STRING, description: "現在の技術成熟度レベル（TRL）と、研究チームの実績。必ず日本語でMarkdown形式で記述。" },
+                ipPortfolio: { type: Type.STRING, description: "関連する知的財産（特許など）の状況。必ず日本語でMarkdown形式で記述。" }
             },
             required: ["technicalChallenge", "trlAndTrackRecord", "ipPortfolio"]
         },
@@ -229,14 +232,14 @@ export const getDeepDiveSchema = () => ({
             type: Type.OBJECT,
             description: "投資判断の要点となるポジティブ要素と懸念点（各最大4つ）",
             properties: {
-                positive: { type: Type.ARRAY, items: { type: Type.STRING }, maxItems: 4, description: "最も重要なポジティブ要素のリスト" },
-                concerns: { type: Type.ARRAY, items: { type: Type.STRING }, maxItems: 4, description: "最も重要な懸念点のリスト" },
+                positive: { type: Type.ARRAY, items: { type: Type.STRING }, maxItems: 4, description: "最も重要なポジティブ要素のリスト（必ず日本語で記述）" },
+                concerns: { type: Type.ARRAY, items: { type: Type.STRING }, maxItems: 4, description: "最も重要な懸念点のリスト（必ず日本語で記述）" },
             },
             required: ["positive", "concerns"],
         },
         killerQuestions: {
             type: Type.ARRAY,
-            description: "次に聞くべき核心を突く質問リスト（最大4つ）",
+            description: "次に聞くべき核心を突く質問リスト（最大4つ、必ず日本語で記述）",
             items: { type: Type.STRING },
             maxItems: 4,
         },
