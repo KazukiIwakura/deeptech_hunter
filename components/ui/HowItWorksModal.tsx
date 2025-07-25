@@ -145,10 +145,12 @@ const ApiKeyManager: React.FC = () => {
 
     const handleSave = () => {
         if (localKey.trim()) {
-            setUserApiKey(localKey.trim());
-            setLocalKey('');
-            setShowSuccess(true);
-            setTimeout(() => setShowSuccess(false), 2000);
+            const success = setUserApiKey(localKey.trim());
+            if (success) {
+                setLocalKey('');
+                setShowSuccess(true);
+                setTimeout(() => setShowSuccess(false), 2000);
+            }
         }
     };
     
@@ -185,14 +187,22 @@ const ApiKeyManager: React.FC = () => {
             <StatusDisplay />
 
             <div className="space-y-2">
-                <label htmlFor="api-key-input" className="font-bold text-main-light text-sm">Google Gemini APIキー</label>
+                <div className="flex items-center justify-between">
+                    <label htmlFor="api-key-input" className="font-bold text-main-light text-sm">Google Gemini APIキー</label>
+                    <div className="flex items-center gap-1 text-xs text-green-600">
+                        <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                        <span>AES暗号化保護</span>
+                    </div>
+                </div>
                 <div className="relative">
                      <input
                         id="api-key-input"
                         type={showKey ? 'text' : 'password'}
                         value={localKey}
                         onChange={(e) => setLocalKey(e.target.value)}
-                        placeholder={userApiKey ? '新しいキーを入力して上書き' : 'ここにAPIキーを貼り付け'}
+                        placeholder={userApiKey ? '新しいキーを入力して上書き' : 'AIza で始まる39文字のキーを入力'}
                         className="w-full pl-3 pr-10 py-2 border-2 border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none text-main placeholder:text-neutral-500 bg-neutral-50 focus:bg-white transition-colors duration-200"
                     />
                     <button
@@ -212,8 +222,12 @@ const ApiKeyManager: React.FC = () => {
                         disabled={!localKey.trim()}
                         variant="primary"
                         size="small"
+                        className="flex items-center gap-2"
                     >
-                        保存する
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                        暗号化して保存
                     </Button>
                     {userApiKey && (
                         <Button onClick={handleDelete} variant="secondary" size="small">
@@ -223,15 +237,208 @@ const ApiKeyManager: React.FC = () => {
                      {showSuccess && <span className="text-success-text font-semibold animate-fade-in text-sm">保存しました！</span>}
                 </div>
             </div>
-             <div className="bg-warning-light p-4 rounded-lg border border-amber-200 text-warning-text">
+             {/* リアルタイム使用量表示 */}
+            {userApiKey && (
+                <div className="bg-indigo-50 p-4 rounded-lg border border-indigo-200">
+                    <h4 className="text-indigo-800 mb-3 flex items-center font-bold text-sm">
+                        <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        リアルタイム使用状況
+                    </h4>
+                    <div className="space-y-3">
+                        {/* 今日の使用量 */}
+                        <div className="space-y-1">
+                            <div className="flex justify-between text-xs">
+                                <span className="text-indigo-700">今日の使用量</span>
+                                <span className="font-mono text-indigo-800">{appShell.usage.dailyUsage}/{appShell.limits.daily}</span>
+                            </div>
+                            <div className="w-full bg-indigo-200 rounded-full h-2">
+                                <div 
+                                    className={`h-2 rounded-full transition-all duration-300 ${
+                                        appShell.usage.dailyUsage / appShell.limits.daily > 0.8 
+                                            ? 'bg-red-500' 
+                                            : appShell.usage.dailyUsage / appShell.limits.daily > 0.6 
+                                                ? 'bg-yellow-500' 
+                                                : 'bg-green-500'
+                                    }`}
+                                    style={{ width: `${Math.min((appShell.usage.dailyUsage / appShell.limits.daily) * 100, 100)}%` }}
+                                />
+                            </div>
+                        </div>
+
+                        {/* 今週の使用量 */}
+                        <div className="space-y-1">
+                            <div className="flex justify-between text-xs">
+                                <span className="text-indigo-700">今週の使用量</span>
+                                <span className="font-mono text-indigo-800">{appShell.usage.weeklyUsage}/{appShell.limits.weekly}</span>
+                            </div>
+                            <div className="w-full bg-indigo-200 rounded-full h-1.5">
+                                <div 
+                                    className="bg-indigo-500 h-1.5 rounded-full transition-all duration-300"
+                                    style={{ width: `${Math.min((appShell.usage.weeklyUsage / appShell.limits.weekly) * 100, 100)}%` }}
+                                />
+                            </div>
+                        </div>
+
+                        {/* 今月の使用量 */}
+                        <div className="space-y-1">
+                            <div className="flex justify-between text-xs">
+                                <span className="text-indigo-700">今月の使用量</span>
+                                <span className="font-mono text-indigo-800">{appShell.usage.monthlyUsage}/{appShell.limits.monthly}</span>
+                            </div>
+                            <div className="w-full bg-indigo-200 rounded-full h-1.5">
+                                <div 
+                                    className="bg-indigo-500 h-1.5 rounded-full transition-all duration-300"
+                                    style={{ width: `${Math.min((appShell.usage.monthlyUsage / appShell.limits.monthly) * 100, 100)}%` }}
+                                />
+                            </div>
+                        </div>
+
+                        {/* 制限到達時の警告 */}
+                        {appShell.isLimitReached && (
+                            <div className="bg-red-100 border border-red-300 rounded-lg p-2 mt-3">
+                                <div className="flex items-center text-red-700 text-xs">
+                                    <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                    </svg>
+                                    <span className="font-bold">使用制限に達しています</span>
+                                </div>
+                                <p className="text-xs text-red-600 mt-1 ml-6">
+                                    制限は自動的にリセットされます。緊急時は下記ボタンで手動リセット可能です。
+                                </p>
+                            </div>
+                        )}
+
+                        {/* 使用量80%警告 */}
+                        {!appShell.isLimitReached && appShell.usage.dailyUsage / appShell.limits.daily > 0.8 && (
+                            <div className="bg-yellow-100 border border-yellow-300 rounded-lg p-2 mt-3">
+                                <div className="flex items-center text-yellow-700 text-xs">
+                                    <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                    </svg>
+                                    <span className="font-bold">使用量が80%に達しました</span>
+                                </div>
+                                <p className="text-xs text-yellow-600 mt-1 ml-6">
+                                    残り使用量にご注意ください。
+                                </p>
+                            </div>
+                        )}
+
+                        <div className="flex justify-between items-center mt-3 pt-2 border-t border-indigo-200">
+                            <span className="text-xs text-indigo-600">
+                                制限は毎日午前0時にリセットされます
+                            </span>
+                            <button 
+                                onClick={appShell.resetUsage}
+                                className="text-xs text-indigo-600 hover:text-indigo-800 underline"
+                            >
+                                手動リセット
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* セキュリティ機能の説明 */}
+            <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                <h4 className="text-green-800 mb-2 flex items-center font-bold text-sm">
+                    <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    セキュリティ機能
+                </h4>
+                <div className="space-y-2 text-xs text-green-700 pl-6">
+                    <div className="flex items-start gap-2">
+                        <span className="text-green-600 mt-0.5">•</span>
+                        <span><strong>AES暗号化保存</strong>: APIキーは軍事レベルの暗号化で保護されます</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                        <span className="text-green-600 mt-0.5">•</span>
+                        <span><strong>使用量制限</strong>: 意図しない大量利用を防ぐ自動制限機能</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                        <span className="text-green-600 mt-0.5">•</span>
+                        <span><strong>形式検証</strong>: 無効なAPIキーの保存を事前に防止</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                        <span className="text-green-600 mt-0.5">•</span>
+                        <span><strong>自動期限管理</strong>: 30日以上古いキーは自動的に無効化</span>
+                    </div>
+                </div>
+            </div>
+
+            {/* 使用量制限の詳細説明 */}
+            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                <h4 className="text-blue-800 mb-2 flex items-center font-bold text-sm">
+                    <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clipRule="evenodd" />
+                    </svg>
+                    コスト保護機能
+                </h4>
+                <div className="space-y-2 text-xs text-blue-700 pl-6">
+                    <div className="flex justify-between">
+                        <span>1日の制限:</span>
+                        <span className="font-mono">{appShell.limits.daily}回</span>
+                    </div>
+                    <div className="flex justify-between">
+                        <span>1週間の制限:</span>
+                        <span className="font-mono">{appShell.limits.weekly}回</span>
+                    </div>
+                    <div className="flex justify-between">
+                        <span>1ヶ月の制限:</span>
+                        <span className="font-mono">{appShell.limits.monthly}回</span>
+                    </div>
+                    <p className="text-xs text-blue-600 mt-2 italic">
+                        これらの制限により、予期しない高額請求を防ぎます
+                    </p>
+                </div>
+            </div>
+
+            {/* 重要な注意事項 */}
+            <div className="bg-warning-light p-4 rounded-lg border border-amber-200 text-warning-text">
                 <h4 className={cn('text-base leading-snug font-bold text-main', "text-warning-text mb-1 flex items-center font-bold")}>
                     <HelpCircleIcon className="w-5 h-5 mr-2" />
-                    重要
+                    重要な注意事項
                 </h4>
-                <p className="text-sm text-warning-text leading-relaxed pl-7">
-                    APIキーは、お使いのブラウザのローカルストレージに保存されます。この情報は外部のサーバーには送信されません。共有PCなど、他人がアクセスできる環境ではキーを設定しないでください。
-                    キーは <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" className="font-bold underline hover:text-amber-700">Google AI Studio</a> から取得できます。
-                </p>
+                <div className="space-y-2 text-sm text-warning-text leading-relaxed pl-7">
+                    <div className="flex items-start gap-2">
+                        <span className="text-amber-600 mt-1">⚠️</span>
+                        <span>APIキーは暗号化されてブラウザに保存され、外部サーバーには送信されません</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                        <span className="text-amber-600 mt-1">⚠️</span>
+                        <span>共有PCや他人がアクセス可能な環境では設定しないでください</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                        <span className="text-amber-600 mt-1">⚠️</span>
+                        <span>APIキーは <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" className="font-bold underline hover:text-amber-700">Google AI Studio</a> から取得できます</span>
+                    </div>
+                </div>
+            </div>
+
+            {/* 今後の改善予定 */}
+            <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                <h4 className="text-gray-800 mb-2 flex items-center font-bold text-sm">
+                    <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
+                    </svg>
+                    今後の改善予定
+                </h4>
+                <div className="space-y-1 text-xs text-gray-600 pl-6">
+                    <div className="flex items-center gap-2">
+                        <span className="text-gray-400">🔄</span>
+                        <span>サーバーサイドでのAPIキー管理（完全なセキュリティ）</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <span className="text-gray-400">👤</span>
+                        <span>ユーザーアカウント機能とティア別制限</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <span className="text-gray-400">📊</span>
+                        <span>詳細な使用量分析とコスト予測</span>
+                    </div>
+                </div>
             </div>
         </div>
     );

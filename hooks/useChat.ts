@@ -3,6 +3,7 @@ import { useReducer, useCallback, useMemo } from 'react';
 import { createDeepDiveChat, getChatSuggestions, withRetry } from '../services/geminiService';
 import type { DeepTech, ChatSession, ChatMessage, Source } from '../types';
 import type { GoogleGenAI, GenerateContentResponse } from '@google/genai';
+import { useApiUsageMonitor } from '@/hooks/useApiUsageMonitor';
 
 // 1. State and Action Types
 interface ChatState {
@@ -103,6 +104,7 @@ const chatReducer = (state: ChatState, action: ChatAction): ChatState => {
  */
 export const useChat = (ai: GoogleGenAI | null, useDemoData: boolean, deepDiveAnalysis: string) => {
     const [state, dispatch] = useReducer(chatReducer, initialState);
+    const { trackApiCall } = useApiUsageMonitor();
 
     const activeSession = useMemo(() => state.sessions.find(s => s.id === state.activeId), [state.sessions, state.activeId]);
 
@@ -131,6 +133,12 @@ export const useChat = (ai: GoogleGenAI | null, useDemoData: boolean, deepDiveAn
 
         (async () => {
             try {
+                // 使用量制限チェック（デモモードでない場合のみ）
+                if (!useDemoData && !trackApiCall()) {
+                    dispatch({ type: 'SET_SUGGESTIONS', payload: { sessionId: newSession.id, suggestions: [], isLoading: false } });
+                    return;
+                }
+                
                 const suggestions = await getChatSuggestions(ai, newSession.tech.techName, newSession.tech.university, newSession.initialAnalysis, useDemoData);
                 dispatch({ type: 'SET_SUGGESTIONS', payload: { sessionId: newSession.id, suggestions, isLoading: false } });
             } catch (err) {
@@ -150,6 +158,12 @@ export const useChat = (ai: GoogleGenAI | null, useDemoData: boolean, deepDiveAn
         const modelPlaceholder: ChatMessage = { id: crypto.randomUUID(), role: 'model', content: '' };
 
         dispatch({ type: 'SEND_MESSAGE_START', payload: { sessionId, userMessage, modelPlaceholder, newTitle } });
+
+        // 使用量制限チェック（デモモードでない場合のみ）
+        if (!useDemoData && !trackApiCall()) {
+            dispatch({ type: 'SEND_MESSAGE_ERROR', payload: { sessionId, error: 'API使用制限に達しています。', modelPlaceholderId: modelPlaceholder.id } });
+            return;
+        }
 
         try {
             const stream: AsyncGenerator<GenerateContentResponse> = await withRetry(() => activeSession.geminiChat.sendMessageStream({ message: userInput }));

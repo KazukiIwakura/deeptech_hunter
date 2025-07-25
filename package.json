@@ -11,12 +11,14 @@
     "benchmark:quality": "tsx services/quality/benchmark-runner.ts"
   },
   "dependencies": {
-    "react-dom": "^19.1.0",
-    "react": "^19.1.0",
     "@google/genai": "^1.8.0",
+    "crypto-js": "^4.2.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@types/crypto-js": "^4.2.2",
     "@types/node": "^22.14.0",
     "typescript": "~5.7.2",
     "vite": "^6.2.0"
