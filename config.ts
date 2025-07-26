@@ -1,16 +1,7 @@
-// config.ts
-
 /**
- * 体験モードを使用するかのデフォルト値。
- * この設定はUIから動的に上書き可能です。
- * true: `services/mockData.ts`のローカルデータを使用します (APIコールなし)。
- * false: 実際のGemini APIに接続します (APIキーが必要)。
+ * Legacy config file - 後方互換性のため保持
+ * 新しいコードでは config/ ディレクトリから直接インポートを推奨
  */
-export const USE_DEMO_DATA = true;
 
-/**
- * AIの最終出力言語設定
- * 'ja': 日本語で出力
- * 'en': 英語で出力
- */
-export const OUTPUT_LANGUAGE = 'ja';
+// Re-export all config from the organized config directory
+export * from './config/app';

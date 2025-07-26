@@ -63,7 +63,7 @@ export class OptimizedResponseValidator {
           }
 
           // パフォーマンス測定終了
-          const metrics = endMeasurement({
+          const _metrics = endMeasurement({
             cacheHitRate: performanceMonitor.getCacheHitRate(),
             stageGatingEnabled: this.options.enableStageGating,
             earlyTermination: false
@@ -96,7 +96,7 @@ export class OptimizedResponseValidator {
           const earlyResult = this.createLowQualityAssessment(dimensions, 'ソース信頼性が低いため詳細評価を省略');
 
           // パフォーマンス測定終了（早期終了）
-          const earlyMetrics = endMeasurement({
+          const _earlyMetrics = endMeasurement({
             cacheHitRate: performanceMonitor.getCacheHitRate(),
             stageGatingEnabled: this.options.enableStageGating,
             earlyTermination: true

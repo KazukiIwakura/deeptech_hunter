@@ -1,5 +1,3 @@
-import type { Chat } from '@google/genai';
-
 // Core business entities
 export interface DeepTech {
   id: string;
@@ -124,3 +122,5 @@ export interface QualityMetrics {
   highQualityCount: number;
   recommendations: string[];
 }
+
+// Chat related types are now in types/ui.ts to avoid duplication

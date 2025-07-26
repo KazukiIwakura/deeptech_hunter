@@ -43,17 +43,17 @@ export const useApiUsageMonitor = () => {
 
     // 制限チェック
     if (currentDaily >= DAILY_LIMIT) {
-      alert(`1日のAPI使用制限（${DAILY_LIMIT}回）に達しました。明日まで待つか、制限を見直してください。`);
+      alert(`1日のAPI使用制限（${DAILY_LIMIT}回）に達しました。\n\n【制限の理由】\n・AIサービスの計算コストを管理するため\n・予期しない高額請求を防ぐため\n・システム全体の安定性を保つため\n\n制限は毎日午前0時に自動リセットされます。緊急時は設定画面から手動リセットも可能です。`);
       return false;
     }
 
     if (currentWeekly >= WEEKLY_LIMIT) {
-      alert(`1週間のAPI使用制限（${WEEKLY_LIMIT}回）に達しました。`);
+      alert(`1週間のAPI使用制限（${WEEKLY_LIMIT}回）に達しました。\n\n【制限の理由】\n・AIサービスの計算コストを管理するため\n・予期しない高額請求を防ぐため\n・システム全体の安定性を保つため\n\n制限は毎週自動リセットされます。緊急時は設定画面から手動リセットも可能です。`);
       return false;
     }
 
     if (currentMonthly >= MONTHLY_LIMIT) {
-      alert(`1ヶ月のAPI使用制限（${MONTHLY_LIMIT}回）に達しました。`);
+      alert(`1ヶ月のAPI使用制限（${MONTHLY_LIMIT}回）に達しました。\n\n【制限の理由】\n・AIサービスの計算コストを管理するため\n・予期しない高額請求を防ぐため\n・システム全体の安定性を保つため\n\n制限は毎月自動リセットされます。緊急時は設定画面から手動リセットも可能です。`);
       return false;
     }
 

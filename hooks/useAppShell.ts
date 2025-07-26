@@ -1,7 +1,7 @@
 
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { getDiscoverySuggestions } from '../services/geminiService';
-import { USE_DEMO_DATA } from '../config';
+import { USE_DEMO_DATA } from '@/config';
 import { encryptApiKey, decryptApiKey, validateApiKeyFormat } from '@/utils/encryption';
 import { useApiUsageMonitor } from '@/hooks/useApiUsageMonitor';
 
