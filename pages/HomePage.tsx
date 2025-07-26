@@ -6,7 +6,7 @@ import { SearchForm } from '../components/search/SearchForm';
 import { DiscoveryZone } from '../components/search/DiscoveryZone';
 import { LightbulbIcon } from '../components/icons/LightbulbIcon';
 
-const cn = (...classes: (string | undefined | null | false | 0)[]) => classes.filter(Boolean).join(' ');
+
 
 interface HomePageProps {
   onSearch: (query: string) => void;

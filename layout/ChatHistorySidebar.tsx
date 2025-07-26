@@ -10,7 +10,6 @@ import { SettingsIcon } from '../components/icons/SettingsIcon';
 import { VialIcon } from '../components/icons/VialIcon';
 import { ChevronLeftIcon } from '../components/icons/ChevronLeftIcon';
 import { ChevronRightIcon } from '../components/icons/ChevronRightIcon';
-import { Button } from '../components/common/Button';
 
 
 const cn = (...classes: (string | undefined | null | false | 0)[]) => classes.filter(Boolean).join(' ');

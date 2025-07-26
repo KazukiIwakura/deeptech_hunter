@@ -31,7 +31,7 @@ const BreadcrumbSeparator: React.FC = () => (
     </li>
 );
 
-export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
+export const Header: React.FC<HeaderProps> = ({ onSearch: _ }) => {
     const {
         appShell,
         search,

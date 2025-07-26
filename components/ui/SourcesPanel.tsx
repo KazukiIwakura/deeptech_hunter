@@ -1,7 +1,7 @@
 
 
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import type { Source } from '../../types';
 import { XCircleIcon } from '../icons/XCircleIcon';
 import { Favicon } from '../common/Favicon';

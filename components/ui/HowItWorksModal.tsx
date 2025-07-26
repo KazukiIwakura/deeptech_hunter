@@ -14,7 +14,7 @@ import { CodeIcon } from '../icons/CodeIcon';
 import { TerminalIcon } from '../icons/TerminalIcon';
 import { CpuChipIcon } from '../icons/CpuChipIcon';
 import { HelpCircleIcon } from '../icons/HelpCircleIcon';
-import { TimelineIcon } from '../icons/TimelineIcon';
+
 import { ZoomInIcon } from '../icons/ZoomInIcon';
 import { BalanceIcon } from '../icons/BalanceIcon';
 import { KeyIcon } from '../icons/KeyIcon';
@@ -305,7 +305,7 @@ const ApiKeyManager: React.FC = () => {
                                     <span className="font-bold">使用制限に達しています</span>
                                 </div>
                                 <p className="text-xs text-red-600 mt-1 ml-6">
-                                    制限は自動的にリセットされます。緊急時は下記ボタンで手動リセット可能です。
+                                    制限は自動的にリセットされます。緊急時やテスト用に手動リセットも可能です。
                                 </p>
                             </div>
                         )}
@@ -327,11 +327,12 @@ const ApiKeyManager: React.FC = () => {
 
                         <div className="flex justify-between items-center mt-3 pt-2 border-t border-indigo-200">
                             <span className="text-xs text-indigo-600">
-                                制限は毎日午前0時にリセットされます
+                                制限は毎日午前0時に自動リセット
                             </span>
                             <button 
                                 onClick={appShell.resetUsage}
                                 className="text-xs text-indigo-600 hover:text-indigo-800 underline"
+                                title="緊急時やテスト用に手動でリセット可能です"
                             >
                                 手動リセット
                             </button>
@@ -374,24 +375,43 @@ const ApiKeyManager: React.FC = () => {
                     <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clipRule="evenodd" />
                     </svg>
-                    コスト保護機能
+                    使用制限について
                 </h4>
-                <div className="space-y-2 text-xs text-blue-700 pl-6">
-                    <div className="flex justify-between">
-                        <span>1日の制限:</span>
-                        <span className="font-mono">{appShell.limits.daily}回</span>
+                <div className="space-y-3 text-xs text-blue-700 pl-6">
+                    <div className="space-y-1">
+                        <div className="flex justify-between">
+                            <span>1日の制限:</span>
+                            <span className="font-mono">{appShell.limits.daily}回</span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span>1週間の制限:</span>
+                            <span className="font-mono">{appShell.limits.weekly}回</span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span>1ヶ月の制限:</span>
+                            <span className="font-mono">{appShell.limits.monthly}回</span>
+                        </div>
                     </div>
-                    <div className="flex justify-between">
-                        <span>1週間の制限:</span>
-                        <span className="font-mono">{appShell.limits.weekly}回</span>
+                    
+                    <div className="bg-blue-100 p-2 rounded text-blue-800">
+                        <p className="font-semibold mb-1">なぜ制限があるの？</p>
+                        <ul className="space-y-0.5 text-xs">
+                            <li>• <strong>コスト管理</strong>: AIの計算処理は高額なため</li>
+                            <li>• <strong>予期しない請求防止</strong>: 意図しない大量利用を防ぐ</li>
+                            <li>• <strong>システム安定性</strong>: 全ユーザーの快適な利用を保証</li>
+                            <li>• <strong>公平性</strong>: リソースの独占を防ぐ</li>
+                        </ul>
                     </div>
-                    <div className="flex justify-between">
-                        <span>1ヶ月の制限:</span>
-                        <span className="font-mono">{appShell.limits.monthly}回</span>
+                    
+                    <div className="bg-green-100 p-2 rounded text-green-800">
+                        <p className="font-semibold mb-1">手動リセットが可能な理由</p>
+                        <ul className="space-y-0.5 text-xs">
+                            <li>• <strong>緊急時対応</strong>: 重要な調査が必要な場合</li>
+                            <li>• <strong>テスト・開発用</strong>: 機能確認のため</li>
+                            <li>• <strong>ユーザー判断</strong>: コストを理解した上での利用</li>
+                        </ul>
+                        <p className="text-xs mt-1 italic">※ 手動リセット後も制限は再度適用されます</p>
                     </div>
-                    <p className="text-xs text-blue-600 mt-2 italic">
-                        これらの制限により、予期しない高額請求を防ぎます
-                    </p>
                 </div>
             </div>
 
