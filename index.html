@@ -1,354 +1,473 @@
 <!DOCTYPE html>
 <html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ディープテックハンター | 日本の大学技術を発掘</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              // デジタル庁準拠カラーパレット
-              primary: {
-                DEFAULT: '#0066CC',
-                hover: '#0052A3',
-                light: '#E6F2FF',
-                lighter: '#F5F9FF',
-                text: '#0066CC',
-              },
-              secondary: {
-                DEFAULT: '#666666',
-                light: '#F5F5F5',
-              },
-              success: {
-                DEFAULT: '#00A040',
-                text: '#006B2B',
-                light: '#E6F7ED',
-                'light-hover': '#D1F2DD',
-              },
-              warning: {
-                DEFAULT: '#FF8C00',
-                text: '#CC7000',
-                light: '#FFF4E6',
-                'light-hover': '#FFEBCC',
-              },
-              danger: {
-                DEFAULT: '#E60012',
-                text: '#B8000E',
-                light: '#FFE6E8',
-                'light-hover': '#FFCCCE',
-              },
-              // テキストカラー（コントラスト比4.5:1以上を確保）
-              text: {
-                primary: '#1A1A1A',    // より濃い色でコントラスト向上
-                secondary: '#4A4A4A',  // コントラスト比4.5:1以上
-                tertiary: '#6B6B6B',   // コントラスト比4.5:1以上
-              },
-              // 背景カラー
-              bg: {
-                primary: '#FFFFFF',
-                secondary: '#F8F9FA',
-                tertiary: '#F0F0F0',
-              },
-              // ボーダーカラー（コントラスト比3:1以上を確保）
-              border: {
-                primary: '#B3B3B3',    // コントラスト比3.4:1
-                secondary: '#D4D4D4',  // コントラスト比3.1:1
-              },
-              // 既存のneutralカラーも保持（互換性のため）
-              neutral: {
-                50: '#f8fafc',
-                100: '#f1f5f9',
-                200: '#e2e8f0',
-                300: '#cbd5e1',
-                400: '#94a3b8',
-                500: '#64748b',
-                600: '#475569',
-                700: '#334152',
-                800: '#1e293b',
-                900: '#0f172a',
-              },
-              // 後方互換性のため
-              main: {
-                DEFAULT: '#333333',
-                light: '#666666',
-                lighter: '#999999',
-              },
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ディープテックハンター | 日本の大学技術を発掘</title>
+
+  <!-- SEO Meta Tags -->
+  <meta name="description"
+    content="日本の大学・研究機関の最先端ディープテクノロジーを発見・分析するAI搭載投資プラットフォーム。ベンチャーキャピタル向けの包括的な技術評価と投資機会の発掘をサポートします。">
+  <meta name="keywords" content="ディープテック,大学技術,投資,ベンチャーキャピタル,AI分析,日本,研究開発,イノベーション">
+  <meta name="author" content="Deep Tech Hunter">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://deeptechhunter.com/">
+  <meta property="og:title" content="ディープテックハンター | 日本の大学技術を発掘">
+  <meta property="og:description"
+    content="日本の大学・研究機関の最先端ディープテクノロジーを発見・分析するAI搭載投資プラットフォーム。ベンチャーキャピタル向けの包括的な技術評価と投資機会の発掘をサポートします。">
+  <meta property="og:image" content="https://deeptechhunter.com/ogp.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="ディープテックハンター - 日本の大学技術を発掘するAI投資プラットフォーム">
+  <meta property="og:site_name" content="ディープテックハンター">
+  <meta property="og:locale" content="ja_JP">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://deeptechhunter.com/">
+  <meta name="twitter:title" content="ディープテックハンター | 日本の大学技術を発掘">
+  <meta name="twitter:description"
+    content="日本の大学・研究機関の最先端ディープテクノロジーを発見・分析するAI搭載投資プラットフォーム。ベンチャーキャピタル向けの包括的な技術評価と投資機会の発掘をサポートします。">
+  <meta name="twitter:image" content="https://deeptechhunter.com/ogp.png">
+  <meta name="twitter:image:alt" content="ディープテックハンター - 日本の大学技術を発掘するAI投資プラットフォーム">
+
+  <!-- Additional Meta Tags -->
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#0066CC">
+  <link rel="canonical" href="https://deeptechhunter.com/">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            // デジタル庁準拠カラーパレット
+            primary: {
+              DEFAULT: '#0066CC',
+              hover: '#0052A3',
+              light: '#E6F2FF',
+              lighter: '#F5F9FF',
+              text: '#0066CC',
             },
-            fontFamily: {
-              sans: ['"Noto Sans JP"', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
+            secondary: {
+              DEFAULT: '#666666',
+              light: '#F5F5F5',
             },
-            fontSize: {
-              'xs': ['12px', '1.5'],
-              'sm': ['14px', '1.5'],
-              'base': ['16px', '1.6'],
-              'lg': ['18px', '1.6'],
-              'xl': ['20px', '1.6'],
-              '2xl': ['24px', '1.4'],
-              '3xl': ['30px', '1.3'],
-              '4xl': ['36px', '1.2'],
+            success: {
+              DEFAULT: '#00A040',
+              text: '#006B2B',
+              light: '#E6F7ED',
+              'light-hover': '#D1F2DD',
             },
-            spacing: {
-              'xs': '4px',
-              'sm': '8px',
-              'md': '16px',
-              'lg': '24px',
-              'xl': '32px',
-              '2xl': '48px',
+            warning: {
+              DEFAULT: '#FF8C00',
+              text: '#CC7000',
+              light: '#FFF4E6',
+              'light-hover': '#FFEBCC',
             },
-            borderRadius: {
-              'sm': '4px',
-              'md': '8px',
-              'lg': '12px',
-              'xl': '16px',
-              '2xl': '24px',
+            danger: {
+              DEFAULT: '#E60012',
+              text: '#B8000E',
+              light: '#FFE6E8',
+              'light-hover': '#FFCCCE',
             },
-            boxShadow: {
-              'sm': '0 1px 2px rgba(0, 0, 0, 0.05)',
-              'md': '0 4px 6px rgba(0, 0, 0, 0.07)',
-              'lg': '0 10px 15px rgba(0, 0, 0, 0.1)',
-              'xl': '0 20px 25px rgba(0, 0, 0, 0.1)',
+            // テキストカラー（コントラスト比4.5:1以上を確保）
+            text: {
+              primary: '#1A1A1A',    // より濃い色でコントラスト向上
+              secondary: '#4A4A4A',  // コントラスト比4.5:1以上
+              tertiary: '#6B6B6B',   // コントラスト比4.5:1以上
+            },
+            // 背景カラー
+            bg: {
+              primary: '#FFFFFF',
+              secondary: '#F8F9FA',
+              tertiary: '#F0F0F0',
+            },
+            // ボーダーカラー（コントラスト比3:1以上を確保）
+            border: {
+              primary: '#B3B3B3',    // コントラスト比3.4:1
+              secondary: '#D4D4D4',  // コントラスト比3.1:1
+            },
+            // 既存のneutralカラーも保持（互換性のため）
+            neutral: {
+              50: '#f8fafc',
+              100: '#f1f5f9',
+              200: '#e2e8f0',
+              300: '#cbd5e1',
+              400: '#94a3b8',
+              500: '#64748b',
+              600: '#475569',
+              700: '#334152',
+              800: '#1e293b',
+              900: '#0f172a',
+            },
+            // 後方互換性のため
+            main: {
+              DEFAULT: '#333333',
+              light: '#666666',
+              lighter: '#999999',
             },
           },
+          fontFamily: {
+            sans: ['"Noto Sans JP"', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
+          },
+          fontSize: {
+            'xs': ['12px', '1.5'],
+            'sm': ['14px', '1.5'],
+            'base': ['16px', '1.6'],
+            'lg': ['18px', '1.6'],
+            'xl': ['20px', '1.6'],
+            '2xl': ['24px', '1.4'],
+            '3xl': ['30px', '1.3'],
+            '4xl': ['36px', '1.2'],
+          },
+          spacing: {
+            'xs': '4px',
+            'sm': '8px',
+            'md': '16px',
+            'lg': '24px',
+            'xl': '32px',
+            '2xl': '48px',
+          },
+          borderRadius: {
+            'sm': '4px',
+            'md': '8px',
+            'lg': '12px',
+            'xl': '16px',
+            '2xl': '24px',
+          },
+          boxShadow: {
+            'sm': '0 1px 2px rgba(0, 0, 0, 0.05)',
+            'md': '0 4px 6px rgba(0, 0, 0, 0.07)',
+            'lg': '0 10px 15px rgba(0, 0, 0, 0.1)',
+            'xl': '0 20px 25px rgba(0, 0, 0, 0.1)',
+          },
         },
-      }
-    </script>
-    <style>
-      /* Smooth scrolling for anchor links and programmatic scrolls */
-      html {
-        scroll-behavior: smooth;
+      },
+    }
+  </script>
+  <style>
+    /* Smooth scrolling for anchor links and programmatic scrolls */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* For custom scrollbar styling */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #e2e8f0;
+      /* neutral-200 */
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #94a3b8;
+      /* neutral-400 */
+      border-radius: 8px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #64748b;
+      /* neutral-500 */
+    }
+
+    /* Global fade-in animation */
+    @keyframes fade-in {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
       }
 
-      /* For custom scrollbar styling */
-      ::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
+      to {
+        opacity: 1;
+        transform: translateY(0);
       }
-      ::-webkit-scrollbar-track {
-        background: #e2e8f0; /* neutral-200 */
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #94a3b8; /* neutral-400 */
-        border-radius: 8px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #64748b; /* neutral-500 */
-      }
-      /* Global fade-in animation */
-      @keyframes fade-in {
-        from { opacity: 0; transform: translateY(8px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
-      .animate-fade-in {
-        animation: fade-in 0.5s ease-out forwards;
-      }
-      /* Avatar glow animation for AI thinking state */
-      @keyframes pulse-glow {
-        0%, 100% {
-          box-shadow: 0 0 0 0 rgba(0, 23, 193, 0.4);
-        }
-        50% {
-          box-shadow: 0 0 0 8px rgba(0, 23, 193, 0);
-        }
-      }
-      .animate-pulse-glow {
-        animation: pulse-glow 2s infinite;
-      }
-      /* For screen-reader accessibility */
-      .sr-only {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip: rect(0, 0, 0, 0);
-        white-space: nowrap;
-        border-width: 0;
+    }
+
+    .animate-fade-in {
+      animation: fade-in 0.5s ease-out forwards;
+    }
+
+    /* Avatar glow animation for AI thinking state */
+    @keyframes pulse-glow {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(0, 23, 193, 0.4);
       }
 
-      /* --- Custom Button Styles --- */
-      .btn {
-          position: relative;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          flex-shrink: 0;
-          font-weight: 700;
-          border-radius: 0.5rem; /* 8px */
-          transition: all 0.2s ease-in-out;
-          -webkit-tap-highlight-color: transparent;
-          cursor: pointer;
-          text-align: center;
-          border: 1px solid transparent;
+      50% {
+        box-shadow: 0 0 0 8px rgba(0, 23, 193, 0);
       }
-      .btn:focus-visible {
-          outline: 2px solid #0066CC; /* primary */
-          outline-offset: 2px;
-      }
-      .btn:disabled, .btn[disabled] {
-          opacity: 0.6;
-          cursor: not-allowed;
-          background-image: none !important;
-          pointer-events: none;
-      }
+    }
 
-      /* Variants - デジタル庁準拠 */
-      .btn-primary {
-          background-color: #0066CC; /* デジタル庁ブルー */
-          color: white;
-      }
-      .btn-primary:not(:disabled):hover {
-          background-color: #0052A3; /* primary-hover */
-      }
-      .btn-primary:disabled {
-          background-color: #CCCCCC; /* border-primary */
-      }
+    .animate-pulse-glow {
+      animation: pulse-glow 2s infinite;
+    }
 
-      .btn-secondary {
-          background-color: white;
-          color: #0066CC; /* primary */
-          border-color: #0066CC; /* primary */
-      }
-      .btn-secondary:not(:disabled):hover {
-          background-color: #E6F2FF; /* primary-light */
-      }
+    /* For screen-reader accessibility */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
+    }
 
-      .btn-tertiary {
-          background-color: transparent;
-          color: #0066CC; /* primary */
-          text-decoration: underline;
-          text-underline-offset: 4px;
-      }
-      .btn-tertiary:not(:disabled):hover {
-          background-color: #F5F9FF; /* primary-lighter */
-      }
+    /* --- Custom Button Styles --- */
+    .btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-weight: 700;
+      border-radius: 0.5rem;
+      /* 8px */
+      transition: all 0.2s ease-in-out;
+      -webkit-tap-highlight-color: transparent;
+      cursor: pointer;
+      text-align: center;
+      border: 1px solid transparent;
+    }
 
-      .btn-ghost {
-        background-color: transparent;
-        color: #666666; /* secondary */
-      }
-      .btn-ghost:not(:disabled):hover {
-        background-color: #F8F9FA; /* bg-secondary */
-      }
+    .btn:focus-visible {
+      outline: 2px solid #0066CC;
+      /* primary */
+      outline-offset: 2px;
+    }
 
-      .btn-discovery {
-          background-color: transparent;
-          color: #333333; /* text-primary */
-          border-color: #E0E0E0; /* border-secondary */
-      }
-      .btn-discovery:not(:disabled):hover {
-          color: #0066CC; /* primary */
-          border-color: #0066CC; /* primary */
-          background-color: #F5F9FF; /* primary-lighter */
-      }
+    .btn:disabled,
+    .btn[disabled] {
+      opacity: 0.6;
+      cursor: not-allowed;
+      background-image: none !important;
+      pointer-events: none;
+    }
 
-      .btn-success {
-          background-color: #E6F7ED; /* success-light */
-          color: #006B2B; /* success-text */
-          border-color: #00A040; /* success */
-      }
-      .btn-success:not(:disabled):hover {
-          background-color: #D1F2DD; /* success-light-hover */
-          border-color: #006B2B; /* success-text */
-      }
+    /* Variants - デジタル庁準拠 */
+    .btn-primary {
+      background-color: #0066CC;
+      /* デジタル庁ブルー */
+      color: white;
+    }
 
-      .btn-danger {
-          background-color: #FFE6E8; /* danger-light */
-          color: #B8000E; /* danger-text */
-          border-color: #E60012; /* danger */
-      }
-      .btn-danger:not(:disabled):hover {
-          background-color: #FFCCCE; /* danger-light-hover */
-          border-color: #B8000E; /* danger-text */
-      }
-      
-      /* Inverted for dark backgrounds */
-      .btn-primary-inverted {
-          background-color: hsla(0,0%,100%,.1);
-          color: white;
-      }
-      .btn-primary-inverted:not(:disabled):hover {
-          background-color: hsla(0,0%,100%,.2);
-      }
-      .btn-secondary-inverted {
-          background-color: transparent;
-          color: white;
-          border: 1px solid #94a3b8; /* neutral-400 */
-      }
-      .btn-secondary-inverted:not(:disabled):hover {
-          background-color: hsla(0,0%,100%,.1);
-          border-color: white;
-      }
+    .btn-primary:not(:disabled):hover {
+      background-color: #0052A3;
+      /* primary-hover */
+    }
 
-      .btn-ghost-inverted {
-          background-color: transparent;
-          color: #cbd5e1; /* neutral-300 */
-      }
-      .btn-ghost-inverted:not(:disabled):hover {
-          background-color: hsla(0,0%,100%,.1);
-          color: white;
-      }
+    .btn-primary:disabled {
+      background-color: #CCCCCC;
+      /* border-primary */
+    }
 
-      /* Sizes */
-      .btn-large {
-          min-width: 136px;
-          min-height: 56px;
-          padding: 0 24px;
-          font-size: 1rem; /* 16px */
-          line-height: 1;
-      }
-      .btn-medium {
-          min-width: 96px;
-          min-height: 48px;
-          padding: 0 20px;
-          font-size: 1rem; /* 16px */
-          line-height: 1;
-      }
-      .btn-small {
-          min-width: 80px;
-          min-height: 36px;
-          padding: 0 16px;
-          font-size: 0.875rem; /* 14px */
-          line-height: 1;
-      }
-      .btn-x-small {
-          min-width: 72px;
-          min-height: 28px;
-          padding: 0 12px;
-          font-size: 0.875rem; /* 14px */
-          line-height: 1;
-      }
+    .btn-secondary {
+      background-color: white;
+      color: #0066CC;
+      /* primary */
+      border-color: #0066CC;
+      /* primary */
+    }
 
-      /* Icon Only Button Styles */
-      .btn-icon-only {
-        padding: 0 !important;
-        flex-shrink: 0;
-      }
-      .btn-icon-only.btn-large { width: 56px; }
-      .btn-icon-only.btn-medium { width: 48px; }
-      .btn-icon-only.btn-small { width: 36px; }
-      .btn-icon-only.btn-x-small { width: 28px; }
+    .btn-secondary:not(:disabled):hover {
+      background-color: #E6F2FF;
+      /* primary-light */
+    }
 
-      /* Target Area Enhancement */
-      .btn-target-enhance::after {
-          content: '';
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          width: 100%;
-          height: 100%;
-          min-width: 44px;
-          min-height: 44px;
-      }
-    </style>
+    .btn-tertiary {
+      background-color: transparent;
+      color: #0066CC;
+      /* primary */
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+
+    .btn-tertiary:not(:disabled):hover {
+      background-color: #F5F9FF;
+      /* primary-lighter */
+    }
+
+    .btn-ghost {
+      background-color: transparent;
+      color: #666666;
+      /* secondary */
+    }
+
+    .btn-ghost:not(:disabled):hover {
+      background-color: #F8F9FA;
+      /* bg-secondary */
+    }
+
+    .btn-discovery {
+      background-color: transparent;
+      color: #333333;
+      /* text-primary */
+      border-color: #E0E0E0;
+      /* border-secondary */
+    }
+
+    .btn-discovery:not(:disabled):hover {
+      color: #0066CC;
+      /* primary */
+      border-color: #0066CC;
+      /* primary */
+      background-color: #F5F9FF;
+      /* primary-lighter */
+    }
+
+    .btn-success {
+      background-color: #E6F7ED;
+      /* success-light */
+      color: #006B2B;
+      /* success-text */
+      border-color: #00A040;
+      /* success */
+    }
+
+    .btn-success:not(:disabled):hover {
+      background-color: #D1F2DD;
+      /* success-light-hover */
+      border-color: #006B2B;
+      /* success-text */
+    }
+
+    .btn-danger {
+      background-color: #FFE6E8;
+      /* danger-light */
+      color: #B8000E;
+      /* danger-text */
+      border-color: #E60012;
+      /* danger */
+    }
+
+    .btn-danger:not(:disabled):hover {
+      background-color: #FFCCCE;
+      /* danger-light-hover */
+      border-color: #B8000E;
+      /* danger-text */
+    }
+
+    /* Inverted for dark backgrounds */
+    .btn-primary-inverted {
+      background-color: hsla(0, 0%, 100%, .1);
+      color: white;
+    }
+
+    .btn-primary-inverted:not(:disabled):hover {
+      background-color: hsla(0, 0%, 100%, .2);
+    }
+
+    .btn-secondary-inverted {
+      background-color: transparent;
+      color: white;
+      border: 1px solid #94a3b8;
+      /* neutral-400 */
+    }
+
+    .btn-secondary-inverted:not(:disabled):hover {
+      background-color: hsla(0, 0%, 100%, .1);
+      border-color: white;
+    }
+
+    .btn-ghost-inverted {
+      background-color: transparent;
+      color: #cbd5e1;
+      /* neutral-300 */
+    }
+
+    .btn-ghost-inverted:not(:disabled):hover {
+      background-color: hsla(0, 0%, 100%, .1);
+      color: white;
+    }
+
+    /* Sizes */
+    .btn-large {
+      min-width: 136px;
+      min-height: 56px;
+      padding: 0 24px;
+      font-size: 1rem;
+      /* 16px */
+      line-height: 1;
+    }
+
+    .btn-medium {
+      min-width: 96px;
+      min-height: 48px;
+      padding: 0 20px;
+      font-size: 1rem;
+      /* 16px */
+      line-height: 1;
+    }
+
+    .btn-small {
+      min-width: 80px;
+      min-height: 36px;
+      padding: 0 16px;
+      font-size: 0.875rem;
+      /* 14px */
+      line-height: 1;
+    }
+
+    .btn-x-small {
+      min-width: 72px;
+      min-height: 28px;
+      padding: 0 12px;
+      font-size: 0.875rem;
+      /* 14px */
+      line-height: 1;
+    }
+
+    /* Icon Only Button Styles */
+    .btn-icon-only {
+      padding: 0 !important;
+      flex-shrink: 0;
+    }
+
+    .btn-icon-only.btn-large {
+      width: 56px;
+    }
+
+    .btn-icon-only.btn-medium {
+      width: 48px;
+    }
+
+    .btn-icon-only.btn-small {
+      width: 36px;
+    }
+
+    .btn-icon-only.btn-x-small {
+      width: 28px;
+    }
+
+    /* Target Area Enhancement */
+    .btn-target-enhance::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      height: 100%;
+      min-width: 44px;
+      min-height: 44px;
+    }
+  </style>
   <script type="importmap">
 {
   "imports": {
@@ -360,10 +479,12 @@
   }
 }
 </script>
-<link rel="stylesheet" href="/index.css">
+  <link rel="stylesheet" href="/index.css">
 </head>
-  <body class="antialiased text-main bg-neutral-50">
-    <div id="root"></div>
-    <script type="module" src="/index.tsx"></script>
-  </body>
+
+<body class="antialiased text-main bg-neutral-50">
+  <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+
 </html>
