@@ -2,6 +2,7 @@ import React from 'react';
 import { DeepDivePage, ChatPage, HomePage, ResultsPage } from '@/pages';
 import { ChatHistorySidebar, Header } from '@/layout';
 import { HowItWorksModal } from '@/components/ui/HowItWorksModal';
+import { OGPDebugger } from '@/components/common/OGPDebugger';
 import { useApp } from '@/contexts/AppContext';
 
 /**
@@ -54,6 +55,7 @@ export const AppContent: React.FC = () => {
         onClose={appShell.handleCloseHowItWorksModal}
         initialTab={appShell.initialModalTab}
       />
+      <OGPDebugger />
     </div>
   );
 };
